@@ -37,6 +37,7 @@ git clone https://github.com/limx-tron2/tron2_openpi.git
 git clone https://github.com/limx-tron2/tron2_env.git
 
 cd tron2_openpi
+git checkout blackwell-pro5000
 ```
 
 两个仓库需要保持同级：

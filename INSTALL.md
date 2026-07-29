@@ -39,6 +39,7 @@ git clone https://github.com/limx-tron2/tron2_openpi.git
 git clone https://github.com/limx-tron2/tron2_env.git
 
 cd tron2_openpi
+git checkout blackwell-pro5000
 ```
 
 Keep the two repositories side by side:
