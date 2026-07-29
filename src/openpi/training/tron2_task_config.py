@@ -36,7 +36,7 @@ class Tron2TaskConfig:
     adapt_to_pi: bool = False
     use_delta_joint_actions: bool = False
     rtc_training_simulated_delay: int | None = None
-
+    fsdp_devices: int = 1
 
 def _read_yaml(path: str | pathlib.Path) -> dict[str, Any]:
     with pathlib.Path(path).expanduser().open() as f:
@@ -93,6 +93,7 @@ def create_train_config(path: str | pathlib.Path, *, exp_name: str | None = None
         num_train_steps=task.num_train_steps,
         save_interval=task.save_interval,
         batch_size=task.batch_size,
+        fsdp_devices=task.fsdp_devices,
         assets_base_dir=task.assets_base_dir,
         checkpoint_base_dir=task.checkpoint_base_dir,
     )

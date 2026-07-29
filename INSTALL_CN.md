@@ -67,8 +67,19 @@ sudo apt install ffmpeg libavformat-dev libavcodec-dev libavdevice-dev libavutil
 先安装 `tron2_openpi` 的锁定依赖：
 
 ```bash
-uv sync
-uv pip install -e .
+uv venv
+uv sync --no-dev
+```
+
+## cuDNN 软链接
+
+```bash
+  CUDNN_LIB=.venv/lib/python3.11/site-packages/nvidia/cudnn/lib
+  for so in $CUDNN_LIB/libcudnn*.so.9; do
+      base=$(basename "$so" .so.9)
+      ln -sf "$(basename "$so")" "$CUDNN_LIB/${base}.so.9.24.0"
+      ln -sf "$(basename "$so")" "$CUDNN_LIB/${base}.so.9.24"
+  done
 ```
 
 然后安装同级 `tron2_env` 包：
@@ -83,7 +94,7 @@ uv pip install -e "../tron2_env[bridge,openpi]"
 验证同级运行时能被导入：
 
 ```bash
-PYTHONPATH="$(cd ../tron2_env/src && pwd)" uv run python -c "import tron2_env; print(tron2_env.__file__)"
+PYTHONPATH="$(cd ../tron2_env/src && pwd)" uv run  --no-sync python -c "import tron2_env; print(tron2_env.__file__)"
 ```
 
 输出路径应该指向 `../tron2_env/src/tron2_env/__init__.py`。
@@ -91,7 +102,7 @@ PYTHONPATH="$(cd ../tron2_env/src && pwd)" uv run python -c "import tron2_env; p
 如果需要训练，也建议验证 LeRobot/PyAV 导入链路：
 
 ```bash
-uv run python - <<'PY'
+uv run --no-sync python - <<'PY'
 import av
 print("av:", av.__version__)
 

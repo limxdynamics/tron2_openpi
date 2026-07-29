@@ -70,8 +70,18 @@ installs it as part of the training stack.
 Install the locked dependencies for `tron2_openpi`:
 
 ```bash
-uv sync
-uv pip install -e .
+uv venv
+uv sync --no-dev
+```
+## cuDNN symlinks
+
+```bash
+  CUDNN_LIB=.venv/lib/python3.11/site-packages/nvidia/cudnn/lib
+  for so in $CUDNN_LIB/libcudnn*.so.9; do
+      base=$(basename "$so" .so.9)
+      ln -sf "$(basename "$so")" "$CUDNN_LIB/${base}.so.9.24.0"
+      ln -sf "$(basename "$so")" "$CUDNN_LIB/${base}.so.9.24"
+  done
 ```
 
 Then install the sibling `tron2_env` package:
