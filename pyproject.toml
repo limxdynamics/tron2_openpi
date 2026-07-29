@@ -3,45 +3,51 @@ name = "openpi"
 version = "0.1.0"
 description = "TRON2 deployment package derived from OpenPI"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.11,<3.14"
 license = { file = "LICENSE" }
 dependencies = [
+    "absl-py>=2.0.0",
     "augmax>=0.3.4",
-    "av==14.4.0",
-    "dm-tree>=0.1.8",
+    "av>=18.0.0",
+    "beartype==0.19.0",
+    "chex>=0.1.89",
     "datasets==3.6.0",
+    "dm-tree>=0.1.8",
     "einops>=0.8.0",
     "equinox>=0.11.8",
+    "etils[epath]>=1.6.0",
+    "filelock>=3.16.1",
     "flatbuffers>=24.3.25",
     "flax==0.10.2",
     "fsspec[gcs]>=2024.6.0",
     "gym-aloha>=0.1.1",
     "imageio>=2.36.1",
-    "jax[cuda12]==0.5.3; sys_platform == 'linux'",
-    "jax==0.5.3; sys_platform != 'linux'",
+    "jax[cuda12]==0.6.0; sys_platform == 'linux'",
+    "jax==0.6.0; sys_platform != 'linux'",
     "jaxtyping==0.2.36",
     # Required for LeRobot dataset loading and TRON2 training.
     "lerobot",
     "ml_collections==1.0.0",
-    "numpy>=1.22.4,<2.0.0",
+    "msgpack>=1.0.5",
+    "numpy>=1.22.4",
     "numpydantic>=1.6.6",
     "opencv-python>=4.10.0.84",
     "openpi-client",
+    "optax>=0.2.0",
     "orbax-checkpoint==0.11.13",
     "pillow>=11.0.0",
+    "polars>=1.30.0",
+    "rich>=14.0.0",
     "sentencepiece>=0.2.0",
+    "tensorstore==0.1.74",
     "torch==2.7.1",
     "tqdm-loggable>=0.2",
+    "transformers==4.53.2",
+    "treescope>=0.1.7",
     "typing-extensions>=4.12.2",
     "tyro>=0.9.5",
     "wandb>=0.19.1",
     "websocket-client>=1.8.0",
-    "filelock>=3.16.1",
-    "beartype==0.19.0",
-    "treescope>=0.1.7",
-    "transformers==4.53.2",
-    "rich>=14.0.0",
-    "polars>=1.30.0",
 ]
 
 [dependency-groups]
@@ -54,14 +60,31 @@ dev = [
     "matplotlib>=3.10.0",
     "pynvml>=12.0.0",
 ]
-rlds = [
-    "dlimp",
-    "tensorflow-cpu==2.15.0",
-    "tensorflow-datasets==4.9.9",
-]
+# rlds group disabled — tensorflow-cpu==2.15 requires numpy<2.0, incompatible with JAX 0.6.0.
+# To re-enable: pin JAX back to 0.5.3 and numpy back to <2.0.0.
+# rlds = [
+#     "dlimp",
+#     "tensorflow-cpu==2.15.0",
+#     "tensorflow-datasets==4.9.9",
+# ]
 
 [tool.uv]
-override-dependencies = ["ml-dtypes==0.4.1", "tensorstore==0.1.74"]
+# Override torch 2.7.1 pinned nvidia-* versions with Blackwell-compatible ones.
+override-dependencies = [
+    "ml-dtypes==0.5.1",
+    "tensorstore==0.1.74",
+    "nvidia-cublas-cu12==12.9.2.10",
+    "nvidia-cuda-cupti-cu12==12.9.79",
+    "nvidia-cuda-nvrtc-cu12==12.9.86",
+    "nvidia-cuda-runtime-cu12==12.9.79",
+    "nvidia-cudnn-cu12==9.24.0.43",
+    "nvidia-cufft-cu12==11.4.1.4",
+    "nvidia-cusolver-cu12==11.7.5.82",
+    "nvidia-cusparse-cu12==12.5.10.65",
+    "nvidia-nccl-cu12==2.30.7",
+    "nvidia-nvjitlink-cu12==12.9.86",
+]
+index-url = "http://mirrors.cloud.aliyuncs.com/pypi/simple/"
 
 [tool.uv.sources]
 openpi-client = { workspace = true }
