@@ -203,7 +203,7 @@ checkpoint_dir/assets/<policy.repo_id>/norm_stats.json
 启动 policy server：
 
 ```bash
-uv run scripts/serve_policy.py \
+uv run --no-sync scripts/serve_policy.py \
   --profile configs/deploy/candy_server.yaml
 ```
 
@@ -212,14 +212,14 @@ uv run scripts/serve_policy.py \
 如果 client profile 中 `client.rtc_enabled: false`，在另一个终端运行普通客户端：
 
 ```bash
-uv run python examples/tron2/pi_client.py \
+uv run --no-sync python examples/tron2/pi_client.py \
   --profile configs/deploy/my_task_client.local.yaml
 ```
 
 临时覆盖任务指令：
 
 ```bash
-uv run python examples/tron2/pi_client.py \
+uv run --no-sync python examples/tron2/pi_client.py \
   --profile configs/deploy/my_task_client.local.yaml \
   --prompt="put the object into the drawer"
 ```
@@ -249,7 +249,7 @@ client:
 然后运行：
 
 ```bash
-uv run python examples/tron2/pi_client_rtc.py \
+uv run --no-sync python examples/tron2/pi_client_rtc.py \
   --profile configs/deploy/candy_client.yaml
 ```
 
@@ -271,19 +271,20 @@ cp configs/train/tron2_tasks/example.yaml configs/train/tron2_tasks/my_task.yaml
 
 ```bash
 export HF_LEROBOT_HOME=/path/to/datasets
+export HF_HUB_OFFLINE=1
 ```
 
 首次训练前先计算 normalization statistics：
 
 ```bash
-uv run scripts/compute_norm_stats.py \
+uv run --no-sync scripts/compute_norm_stats.py \
   --task-config configs/train/tron2_tasks/my_task.yaml
 ```
 
 然后启动训练：
 
 ```bash
-uv run scripts/train_tron2_task.py \
+uv run --no-sync scripts/train_tron2_task.py \
   --task-config configs/train/tron2_tasks/my_task.yaml
 ```
 

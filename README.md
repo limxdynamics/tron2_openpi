@@ -212,7 +212,7 @@ Example TRON2 config names currently registered in the code:
 Start the policy server:
 
 ```bash
-uv run scripts/serve_policy.py \
+uv run --no-sync scripts/serve_policy.py \
   --profile configs/deploy/candy_server.yaml
 ```
 
@@ -224,14 +224,14 @@ state, it may lift both arms directly; keep the front workspace clear.**
 For a non-RTC client profile with `client.rtc_enabled: false`, run:
 
 ```bash
-uv run python examples/tron2/pi_client.py \
+uv run --no-sync python examples/tron2/pi_client.py \
   --profile configs/deploy/my_task_client.local.yaml
 ```
 
 Override the prompt for one run:
 
 ```bash
-uv run python examples/tron2/pi_client.py \
+uv run --no-sync python examples/tron2/pi_client.py \
   --profile configs/deploy/my_task_client.local.yaml \
   --prompt="put the object into the drawer"
 ```
@@ -261,7 +261,7 @@ client:
 Then run:
 
 ```bash
-uv run python examples/tron2/pi_client_rtc.py \
+uv run --no-sync python examples/tron2/pi_client_rtc.py \
   --profile configs/deploy/candy_client.yaml
 ```
 
@@ -285,19 +285,20 @@ root. If `repo_id: my_dataset`, the dataset should normally be available under
 
 ```bash
 export HF_LEROBOT_HOME=/path/to/datasets
+export HF_HUB_OFFLINE=1
 ```
 
 Compute normalization statistics before the first training run:
 
 ```bash
-uv run scripts/compute_norm_stats.py \
+uv run --no-sync scripts/compute_norm_stats.py \
   --task-config configs/train/tron2_tasks/my_task.yaml
 ```
 
 Then start training:
 
 ```bash
-uv run scripts/train_tron2_task.py \
+uv run --no-sync scripts/train_tron2_task.py \
   --task-config configs/train/tron2_tasks/my_task.yaml
 ```
 
