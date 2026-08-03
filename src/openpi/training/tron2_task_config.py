@@ -57,21 +57,19 @@ def load_task(path: str | pathlib.Path) -> Tron2TaskConfig:
 
 def create_train_config(path: str | pathlib.Path, *, exp_name: str | None = None) -> _config.TrainConfig:
     task = load_task(path)
-    repack_transforms = _transforms.Group(
-        inputs=[
-            _transforms.RepackTransform(
-                {
-                    "images": {
-                        "cam_high": task.cam_high_key,
-                        "cam_left_wrist": task.cam_left_wrist_key,
-                        "cam_right_wrist": task.cam_right_wrist_key,
-                    },
-                    "state": task.state_key,
-                    "actions": task.action_key,
-                }
-            )
-        ]
-    )
+    repack_structure: dict[str, Any] = {
+        "images": {
+            "cam_high": task.cam_high_key,
+            "cam_left_wrist": task.cam_left_wrist_key,
+            "cam_right_wrist": task.cam_right_wrist_key,
+        },
+        "state": task.state_key,
+        "actions": task.action_key,
+    }
+    if task.prompt_from_task:
+        repack_structure["prompt"] = "prompt"
+
+    repack_transforms = _transforms.Group(inputs=[_transforms.RepackTransform(repack_structure)])
     return _config.TrainConfig(
         name=task.name,
         exp_name=exp_name or task.name,
