@@ -2,6 +2,7 @@ import pathlib
 
 import pytest
 
+import openpi.transforms as _transforms
 from openpi.training import tron2_task_config
 
 
@@ -109,3 +110,29 @@ def test_create_train_config_preserves_task_prompt_through_repack(tmp_path: path
     )
 
     assert repacked["prompt"] == "episode task prompt"
+
+
+def test_create_train_config_propagates_crop_config_for_model_transforms(tmp_path: pathlib.Path):
+    task_path = tmp_path / "task.yaml"
+    task_path.write_text(
+        "\n".join(
+            [
+                "name: pi05_tron2_test",
+                "repo_id: test_dataset",
+                "prompt: fixed prompt",
+                "weight_loader: /tmp/weights/params",
+                "crop_config:",
+                "  observation.images.cam_high:",
+                "    x: 1",
+                "    y: 2",
+                "    w: 3",
+                "    h: 4",
+            ]
+        )
+    )
+
+    config = tron2_task_config.create_train_config(task_path)
+    data_config = config.data.create(config.assets_dirs, config.model)
+
+    assert isinstance(data_config.model_transforms.inputs[0], _transforms.CropImages)
+    assert data_config.model_transforms.inputs[0].crop_config["cam_high"] == {"x": 1, "y": 2, "w": 3, "h": 4}

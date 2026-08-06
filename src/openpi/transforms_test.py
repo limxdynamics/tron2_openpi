@@ -39,6 +39,16 @@ def test_delta_actions_noop():
     assert transform(item) is item
 
 
+def test_crop_images():
+    image = np.arange(4 * 4 * 3).reshape(4, 4, 3)
+    transform = _transforms.CropImages({"cam_high": {"x": 1, "y": 1, "w": 2, "h": 2}})
+
+    transformed = transform({"image": {"cam_high": image, "cam_low": image.copy()}})
+
+    assert transformed["image"]["cam_high"].shape == (2, 2, 3)
+    assert np.array_equal(transformed["image"]["cam_high"], image[1:3, 1:3, :])
+
+
 def test_absolute_actions():
     item = {"state": np.array([1, 2, 3]), "actions": np.array([[3, 4, 5], [5, 6, 7]])}
 

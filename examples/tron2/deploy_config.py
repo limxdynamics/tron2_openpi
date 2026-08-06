@@ -55,6 +55,12 @@ LEGACY_CAMERA_NAME_MAP = {
     "right_wrist_image": "cam_right_wrist",
 }
 
+TRON2_CROP_CONFIG: dict[str, dict[str, int]] = {
+    "cam_high": {"x": 120, "y": 140, "w": 500, "h": 340},
+    "cam_left_wrist": {"x": 0, "y": 0, "w": 640, "h": 480},
+    "cam_right_wrist": {"x": 0, "y": 0, "w": 640, "h": 480},
+}
+
 
 def load_deploy_config(path: str | Path | None) -> dict[str, Any]:
     """Load a public nested deploy profile YAML."""
@@ -244,6 +250,10 @@ def format_obs(obs: dict[str, Any], prompt: str | None = None) -> dict[str, Any]
         for k, v in obs.get("images", {}).items()
     }
     for cam_name, image in formatted["images"].items():
+        box = TRON2_CROP_CONFIG.get(cam_name)
+        if box is not None:
+            x, y, w, h = box["x"], box["y"], box["w"], box["h"]
+            image = image[y : y + h, x : x + w]
         img = image_tools.convert_to_uint8(image_tools.resize_with_pad(image, 224, 224))
         formatted["images"][cam_name] = einops.rearrange(img, "h w c -> c h w")
     if prompt is not None:

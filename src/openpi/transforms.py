@@ -182,6 +182,33 @@ class Unnormalize(DataTransformFn):
 
 
 @dataclasses.dataclass(frozen=True)
+class CropImages(DataTransformFn):
+    """Crop images per-camera using (x, y, w, h) boxes in pixel coordinates.
+
+    The crop is applied in (x, y, w, h) convention:
+        x: left coordinate
+        y: top coordinate
+        w: crop width
+        h: crop height
+
+    Expected image shape: [H, W, C] or [B, H, W, C].
+    """
+
+    crop_config: dict[str, dict[str, int]]
+
+    def __call__(self, data: DataDict) -> DataDict:
+        images = data["image"]
+        for name, box in self.crop_config.items():
+            if name not in images:
+                continue
+            img = images[name]
+            x, y, w, h = box["x"], box["y"], box["w"], box["h"]
+            images[name] = img[..., y : y + h, x : x + w, :]
+        data["image"] = images
+        return data
+
+
+@dataclasses.dataclass(frozen=True)
 class ResizeImages(DataTransformFn):
     height: int
     width: int

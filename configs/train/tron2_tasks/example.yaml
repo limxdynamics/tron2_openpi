@@ -36,6 +36,24 @@ cam_high_key: observation.images.cam_high
 cam_left_wrist_key: observation.images.cam_left_wrist
 cam_right_wrist_key: observation.images.cam_right_wrist
 
+# Optional crop regions applied before resize during training and inference.
+crop_config:
+  observation.images.cam_high:
+    x: 120
+    y: 140
+    w: 500
+    h: 340
+  observation.images.cam_left_wrist:
+    x: 0
+    y: 0
+    w: 640
+    h: 480
+  observation.images.cam_right_wrist:
+    x: 0
+    y: 0
+    w: 640
+    h: 480
+
 # State and action keys.
 state_key: observation.state
 action_key: action

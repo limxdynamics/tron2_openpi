@@ -36,6 +36,13 @@ class Tron2TaskConfig:
     adapt_to_pi: bool = False
     use_delta_joint_actions: bool = False
     rtc_training_simulated_delay: int | None = None
+    crop_config: dict[str, dict[str, int]] = dataclasses.field(
+        default_factory=lambda: {
+            "observation.images.cam_high": {"x": 120, "y": 140, "w": 500, "h": 340},
+            "observation.images.cam_left_wrist": {"x": 0, "y": 0, "w": 640, "h": 480},
+            "observation.images.cam_right_wrist": {"x": 0, "y": 0, "w": 640, "h": 480},
+        }
+    )
 
 
 def _read_yaml(path: str | pathlib.Path) -> dict[str, Any]:
@@ -44,6 +51,23 @@ def _read_yaml(path: str | pathlib.Path) -> dict[str, Any]:
     if not isinstance(data, dict):
         raise ValueError(f"Task config must be a mapping: {path}")
     return data
+
+
+def _normalize_crop_config(
+    crop_config: dict[str, dict[str, int]],
+    *,
+    cam_high_key: str,
+    cam_left_wrist_key: str,
+    cam_right_wrist_key: str,
+) -> dict[str, dict[str, int]]:
+    internal_names = {
+        cam_high_key: "cam_high",
+        cam_left_wrist_key: "cam_left_wrist",
+        cam_right_wrist_key: "cam_right_wrist",
+    }
+    return {
+        internal_names.get(source_key, source_key): box for source_key, box in crop_config.items()
+    }
 
 
 def load_task(path: str | pathlib.Path) -> Tron2TaskConfig:
@@ -90,6 +114,12 @@ def create_train_config(path: str | pathlib.Path, *, exp_name: str | None = None
             use_delta_joint_actions=task.use_delta_joint_actions,
             adapt_to_pi=task.adapt_to_pi,
             state_dim=task.state_dim,
+            crop_config=_normalize_crop_config(
+                task.crop_config,
+                cam_high_key=task.cam_high_key,
+                cam_left_wrist_key=task.cam_left_wrist_key,
+                cam_right_wrist_key=task.cam_right_wrist_key,
+            ),
             repack_transforms=repack_transforms,
         ),
         weight_loader=weight_loaders.CheckpointWeightLoader(task.weight_loader),

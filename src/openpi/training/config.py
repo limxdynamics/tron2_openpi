@@ -30,6 +30,12 @@ import openpi.training.optimizer as _optimizer
 import openpi.training.weight_loaders as weight_loaders
 import openpi.transforms as _transforms
 
+TRON2_CROP_CONFIG: dict[str, dict[str, int]] = {
+    "cam_high": {"x": 120, "y": 140, "w": 500, "h": 340},
+    "cam_left_wrist": {"x": 0, "y": 0, "w": 640, "h": 480},
+    "cam_right_wrist": {"x": 0, "y": 0, "w": 640, "h": 480},
+}
+
 ModelType: TypeAlias = _model.ModelType
 # Work around a tyro issue with using nnx.filterlib.Filter directly.
 Filter: TypeAlias = nnx.filterlib.Filter
@@ -280,11 +286,12 @@ class LeRobotAlohaDataConfig(DataConfigFactory):
 
 @dataclasses.dataclass(frozen=True)
 class LeRobotTronDataConfig(DataConfigFactory):
-    
+
     use_delta_joint_actions: bool = True
     default_prompt: str | None = None
     adapt_to_pi: bool = False
     state_dim: int = 16
+    crop_config: dict[str, dict[str, int]] | None = dataclasses.field(default_factory=lambda: dict(TRON2_CROP_CONFIG))
 
     # Repack transforms.
     repack_transforms: tyro.conf.Suppress[_transforms.Group] = dataclasses.field(
@@ -317,6 +324,11 @@ class LeRobotTronDataConfig(DataConfigFactory):
             )
 
         model_transforms = ModelTransformFactory(default_prompt=self.default_prompt)(model_config)
+        if self.crop_config is not None:
+            model_transforms = dataclasses.replace(
+                model_transforms,
+                inputs=(_transforms.CropImages(self.crop_config), *model_transforms.inputs),
+            )
 
         return dataclasses.replace(
             self.create_base_config(assets_dirs, model_config),

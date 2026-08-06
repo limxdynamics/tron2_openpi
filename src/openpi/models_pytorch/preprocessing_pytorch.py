@@ -16,6 +16,12 @@ IMAGE_KEYS = (
 
 IMAGE_RESOLUTION = (224, 224)
 
+TRON2_CROP_CONFIG: dict[str, dict[str, int]] = {
+    "base_0_rgb": {"x": 120, "y": 140, "w": 500, "h": 340},
+    "left_wrist_0_rgb": {"x": 0, "y": 0, "w": 640, "h": 480},
+    "right_wrist_0_rgb": {"x": 0, "y": 0, "w": 640, "h": 480},
+}
+
 
 def preprocess_observation_pytorch(
     observation,
@@ -23,6 +29,7 @@ def preprocess_observation_pytorch(
     train: bool = False,
     image_keys: Sequence[str] = IMAGE_KEYS,
     image_resolution: tuple[int, int] = IMAGE_RESOLUTION,
+    crop_config: dict[str, dict[str, int]] | None = None,
 ):
     """Torch.compile-compatible version of preprocess_observation_pytorch with simplified type annotations.
 
@@ -34,6 +41,7 @@ def preprocess_observation_pytorch(
     batch_shape = observation.state.shape[:-1]
 
     out_images = {}
+    crop_config = crop_config if crop_config is not None else TRON2_CROP_CONFIG
     for key in image_keys:
         image = observation.images[key]
 
@@ -44,6 +52,12 @@ def preprocess_observation_pytorch(
         if is_channels_first:
             # Convert [B, C, H, W] to [B, H, W, C] for processing
             image = image.permute(0, 2, 3, 1)
+
+        if crop_config is not None and image.shape[1:3] != image_resolution:
+            box = crop_config.get(key)
+            if box is not None:
+                x, y, w, h = box["x"], box["y"], box["w"], box["h"]
+                image = image[:, y : y + h, x : x + w, :]
 
         if image.shape[1:3] != image_resolution:
             logger.info(f"Resizing image {key} from {image.shape[1:3]} to {image_resolution}")
