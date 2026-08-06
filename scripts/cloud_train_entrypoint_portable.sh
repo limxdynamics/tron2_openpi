@@ -22,6 +22,9 @@ MAX_FRAMES=""
 SKIP_NORM=false
 NAME_OVERRIDE=""
 TASK_CONFIG=""
+CROP_HIGH=""
+CROP_LEFT_WRIST=""
+CROP_RIGHT_WRIST=""
 RESUME=false
 OVERWRITE=false
 USE_WANDB=false
@@ -67,6 +70,9 @@ Options:
   --action-horizon N    Action horizon (default: 50)
   --rtc-delay N         Enable training-time RTC with this simulated delay
   --delta               Train with delta joint actions
+  --crop-high X,Y,W,H   Override high camera crop box before resize
+  --crop-left-wrist X,Y,W,H  Override left wrist camera crop box before resize
+  --crop-right-wrist X,Y,W,H Override right wrist camera crop box before resize
   --max-frames N        Maximum frames used for normalization statistics
   --skip-norm           Skip normalization-statistics computation
   --name NAME           Override the generated training config name
@@ -236,6 +242,9 @@ while [ "$#" -gt 0 ]; do
     --action-horizon) require_value "$1" "${2:-}"; ACTION_HORIZON="$2"; shift 2 ;;
     --rtc-delay) require_value "$1" "${2:-}"; RTC_DELAY="$2"; shift 2 ;;
     --delta) USE_DELTA=true; shift ;;
+    --crop-high) require_value "$1" "${2:-}"; CROP_HIGH="$2"; shift 2 ;;
+    --crop-left-wrist) require_value "$1" "${2:-}"; CROP_LEFT_WRIST="$2"; shift 2 ;;
+    --crop-right-wrist) require_value "$1" "${2:-}"; CROP_RIGHT_WRIST="$2"; shift 2 ;;
     --prompt-from-task) PROMPT_FROM_TASK=true; shift ;;
     --max-frames) require_value "$1" "${2:-}"; MAX_FRAMES="$2"; shift 2 ;;
     --skip-norm) SKIP_NORM=true; shift ;;
@@ -259,6 +268,32 @@ require_positive_integer --batch-size "$BATCH_SIZE"
 require_positive_integer --action-horizon "$ACTION_HORIZON"
 [ -z "$MAX_FRAMES" ] || require_positive_integer --max-frames "$MAX_FRAMES"
 [ -z "$RTC_DELAY" ] || require_nonnegative_integer --rtc-delay "$RTC_DELAY"
+
+parse_crop_box() {
+  local option="$1"
+  local value="$2"
+  local name="$3"
+  local -a parts=()
+  IFS=',' read -r -a parts <<< "$value"
+  [ "${#parts[@]}" -eq 4 ] || die "$option must be in the form X,Y,W,H"
+  for part in "${parts[@]}"; do
+    [[ "$part" =~ ^[0-9]+$ ]] || die "$option must contain non-negative integers: $value"
+  done
+  printf '%s' "$name"
+}
+
+for crop_arg in "--crop-high:$CROP_HIGH" "--crop-left-wrist:$CROP_LEFT_WRIST" "--crop-right-wrist:$CROP_RIGHT_WRIST"; do
+  option="${crop_arg%%:*}"
+  value="${crop_arg#*:}"
+  if [ -n "$value" ]; then
+    case "$option" in
+      --crop-high) parse_crop_box "$option" "$value" "cam_high" >/dev/null ;;
+      --crop-left-wrist) parse_crop_box "$option" "$value" "cam_left_wrist" >/dev/null ;;
+      --crop-right-wrist) parse_crop_box "$option" "$value" "cam_right_wrist" >/dev/null ;;
+    esac
+  fi
+done
+
 [ "$RESUME" = false ] || [ "$OVERWRITE" = false ] || die "--resume and --overwrite are mutually exclusive"
 
 cd "$PROJECT_DIR"
@@ -312,7 +347,7 @@ else
   "${PYTHON_COMMAND[@]}" - \
     "$TASK_CONFIG" "$NAME" "$REPO_ID" "$PROMPT" "$WEIGHT_PATH" \
     "$STEPS" "$SAVE_INTERVAL" "$BATCH_SIZE" "$ACTION_HORIZON" \
-    "$USE_DELTA" "$PROMPT_FROM_TASK" "$RTC_DELAY" "$OUTPUT_DIR" <<'PY'
+    "$USE_DELTA" "$PROMPT_FROM_TASK" "$RTC_DELAY" "$OUTPUT_DIR" "$CROP_HIGH" "$CROP_LEFT_WRIST" "$CROP_RIGHT_WRIST" <<'PY'
 import json
 import pathlib
 import sys
@@ -331,7 +366,21 @@ import sys
     prompt_from_task,
     rtc_delay,
     output_dir,
+    crop_high,
+    crop_left_wrist,
+    crop_right_wrist,
 ) = sys.argv[1:]
+
+
+def parse_crop_box(value: str | None) -> dict[str, int] | None:
+    if not value:
+        return None
+    parts = [part.strip() for part in value.split(",")]
+    if len(parts) != 4:
+        raise ValueError(f"crop box must be in the form X,Y,W,H: {value}")
+    x, y, w, h = (int(part) for part in parts)
+    return {"x": x, "y": y, "w": w, "h": h}
+
 
 config = {
     "name": name,
@@ -350,6 +399,18 @@ if prompt:
     config["prompt"] = prompt
 if rtc_delay:
     config["rtc_training_simulated_delay"] = int(rtc_delay)
+
+crop_config = {}
+for key, value in (
+    ("observation.images.cam_high", crop_high),
+    ("observation.images.cam_left_wrist", crop_left_wrist),
+    ("observation.images.cam_right_wrist", crop_right_wrist),
+):
+    crop_box = parse_crop_box(value)
+    if crop_box is not None:
+        crop_config[key] = crop_box
+if crop_config:
+    config["crop_config"] = crop_config
 
 with pathlib.Path(output_path).open("w", encoding="utf-8") as file:
     json.dump(config, file, indent=2)
