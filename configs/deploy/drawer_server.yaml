@@ -7,7 +7,7 @@ policy:
 
   # Trained checkpoint step directory.
   # Update this path after downloading the public Cloth weights.
-  checkpoint_dir: checkpoints/pi05_tron2_drawer/drawer_h50_rtc_20000
+  checkpoint_dir: checkpoints/pi05_tron2_drawer/drawer_h50_rtc_19999
 
   # Default task instruction used when the client does not pass --prompt.
   default_prompt: Open the drawer, take out the toy, and close the drawer
