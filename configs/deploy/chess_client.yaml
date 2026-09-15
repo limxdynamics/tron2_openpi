@@ -1,0 +1,139 @@
+client:
+  # Human-readable task name used for record filenames.
+  task: chess
+
+  # Policy server address from the client process.
+  # Use 127.0.0.1 when the server and client run on the same machine.
+  # Use the server machine IP when they run on different machines.
+  policy_host: 127.0.0.1
+  policy_port: 8000
+
+  # Observation source:
+  # bridge: get images and state from TRON2 Bridge WebSocket.
+  # legacy: get images from directly attached RealSense cameras and robot state
+  # from the robot WebSocket.
+  observation_source: bridge
+
+  # State sent to the policy: 16 means arms+grippers, 18 includes head joints.
+  state_dim: 16
+
+  # Policy action playback rate. publish_rate is the background ServoJ rate.
+  fps: 30.0
+  publish_rate: 300.0
+
+  # Non-RTC client: number of policy chunks to run. Use null for unlimited.
+  max_steps: null
+
+  # Candy uses the RTC client by default.
+  rtc_enabled: true
+
+  # RTC run duration in seconds. Set 0 for unlimited until Ctrl+C.
+  duration: 0
+
+  # RTC timing in paper terms. H is read from server metadata/action_horizon.
+  # execution_horizon is s; delay is the initial d in action frames.
+  execution_horizon: 10
+  delay: 6
+
+  # Inference-time RTC guidance. When trained_rtc_mode is true, the model uses
+  # training-time RTC conditioning and guidance can usually stay disabled.
+  rtc_guidance_enabled: false
+  rtc_guidance_weight: 10.0
+  trained_rtc_mode: true
+
+  # Recover from short bridge/observation gaps without reusing stale observations.
+  obs_timeout_budget_s: 5.0
+  obs_recovery_blend_frames: 6
+
+  # Optional client-side smoothing of executable actions after queue replacement.
+  rtc_action_postprocess:
+    enabled: false
+    boundary_blend_frames: 0
+    boundary_blend_curve: smoothstep
+    boundary_blend_scope: arm
+    ema_alpha: 1.0
+    ema_frames: 0
+    ema_scope: arm
+
+  log_level: INFO
+
+  # Optional CSV logging for commanded actions and observed states.
+  save_record: false
+  action_output_path: debug_images/tron2_action_data.csv
+  state_output_path: debug_images/tron2_state_data.csv
+  rtc_action_output_path: debug_images/tron2_rtc_action_data.csv
+  rtc_state_output_path: debug_images/tron2_rtc_state_data.csv
+
+  # Used only when observation_source is "legacy".
+  legacy_use_time_sync: true
+
+  # Optional per-client prompt. Leave null to use policy.default_prompt.
+  prompt: null
+
+robot:
+  # Robot WebSocket controller address.
+  ip: 10.192.1.2
+  port: 5000
+
+  # Arm initialization pose, 14 values: left arm 7 + right arm 7.
+  # Confirm this pose is safe on your robot before deployment.
+  init_joints:
+    - 0.026899
+    - 0.2612
+    - -0.02709991
+    - -1.5477003
+    - 0.265
+    - 0.0180999
+    - -0.0614999
+    - 0.008999
+    - -0.269
+    - 0.02069998
+    - -1.5567001
+    - -0.254
+    - -0.02309972
+    - 0.06469989
+
+  # Optional head initialization pose [pitch, yaw].
+  init_head:
+    - 1.0467
+    - -0.0139998
+
+  # Feedback polling settings for the robot WebSocket transport.
+  state_queue_maxlen: 7
+  polling_rate: 200.0
+  connection_timeout: 5.0
+
+bridge:
+  # Required when client.observation_source is "bridge".
+  host: wss://10.192.1.4
+  ws_path: /bridge/ws
+
+  # "bridge" uses bridge-aligned joint state. "legacy" uses robot WebSocket
+  # state while still taking images from the bridge.
+  state_source: legacy
+
+  image_max_fps: 0
+  align_max_delay_ms: 200
+  verify_tls: false
+  save_debug_images: true
+  debug_image_dir: debug_images
+
+camera:
+  # Required when client.observation_source is "legacy".
+  # Replace these placeholders with actual RealSense serial numbers.
+  serial_to_name:
+    HEAD_CAMERA_SERIAL: cam_high
+    LEFT_WRIST_CAMERA_SERIAL: cam_left_wrist
+    RIGHT_WRIST_CAMERA_SERIAL: cam_right_wrist
+
+  camera_names:
+    - cam_high
+    - cam_left_wrist
+    - cam_right_wrist
+
+  # RealSense color stream resolution is [height, width, channels].
+  resolution: [480, 640, 3]
+  fps: 30
+  max_queue_size: 10
+  save_debug_images: false
+  debug_image_dir: debug_images

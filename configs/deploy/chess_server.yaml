@@ -1,0 +1,30 @@
+policy:
+  # Training config name registered in src/openpi/training/config.py.
+  config: pi05_tron2_chess
+
+  # Dataset/repo id used by the checkpoint assets, for example norm statistics.
+  repo_id: input
+
+  # Trained checkpoint step directory.
+  # Update this path after downloading the public Cloth weights.
+  checkpoint_dir: checkpoints/pi05_tron2_chess/chess_h30_rtc_30000
+
+  # Default task instruction used when the client does not pass --prompt.
+  default_prompt: sort chess
+
+  # Save raw policy inputs/outputs only for debugging.
+  record: false
+
+  # Optional inference overrides. Keep them aligned with the trained checkpoint.
+  action_horizon: 30
+  state_dim: 16
+  use_delta_joint_actions: false
+
+server:
+  # Policy server listen address.
+  # 0.0.0.0 allows clients on the same machine or robot LAN to connect.
+  host: 0.0.0.0
+  port: 8000
+
+  # JAX persistent compilation cache is controlled by OPENPI_JAX_CACHE_DIR.
+  # Default: /tmp/openpi_jax_cache
