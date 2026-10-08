@@ -418,10 +418,10 @@ def inference_producer(
 
             obs_receive_perf = time.perf_counter()
             obs_receive_wall = time.time()
-            obs_formatted = format_obs(
-                obs,
-                prompt=prompt_controller.get() if prompt_controller is not None else None,
+            prompt, prompt_version = (
+                prompt_controller.snapshot() if prompt_controller is not None else (None, None)
             )
+            obs_formatted = format_obs(obs, prompt=prompt)
 
             metadata = obs.get("metadata", {})
             image_timestamps = metadata.get("image_timestamps_ms", {}) or {}
@@ -529,6 +529,9 @@ def inference_producer(
             t_infer_start = time.perf_counter()
             result = ws_client.infer(obs_formatted, **rtc_kwargs)
             t_infer_end = time.perf_counter()
+            if prompt_controller is not None and prompt_controller.snapshot()[1] != prompt_version:
+                logger.info("[PROMPT] Discarding inference from an older prompt")
+                continue
 
             original_actions = result["raw_actions"]
             processed_actions = np.stack(result["actions"], axis=0)
@@ -554,13 +557,27 @@ def inference_producer(
                 postprocess_delay,
             )
 
-            used_delay = action_queue.merge(
-                original_actions,
-                processed_actions,
-                measured_inference_delay,
-                action_index_before,
-                extra_delay=0,
-            )
+            def merge_actions(
+                original_actions=original_actions,
+                processed_actions=processed_actions,
+                measured_inference_delay=measured_inference_delay,
+                action_index_before=action_index_before,
+            ):
+                return action_queue.merge(
+                    original_actions,
+                    processed_actions,
+                    measured_inference_delay,
+                    action_index_before,
+                    extra_delay=0,
+                )
+
+            if prompt_controller is None:
+                used_delay = merge_actions()
+            else:
+                accepted, used_delay = prompt_controller.apply_if_current(prompt_version, merge_actions)
+                if not accepted:
+                    logger.info("[PROMPT] Discarding inference changed before queue merge")
+                    continue
             merge_diagnostics = action_queue.get_last_merge_diagnostics()
             if record_states is not None and record_states:
                 record_states[-1].update(merge_diagnostics)
@@ -619,6 +636,7 @@ def control_consumer(
     time_origin: float | None = None,
     perf_origin: float | None = None,
     recovery_blend_frames: int = 6,
+    prompt_controller: PromptController | None = None,
 ):
     """Thread: ActionQueue -> env.step()."""
     try:
@@ -635,11 +653,18 @@ def control_consumer(
 
         while not shutdown_event.is_set():
             start_time = time.perf_counter()
+            prompt_version = prompt_controller.snapshot()[1] if prompt_controller is not None else None
             queue_size_before = action_queue.qsize()
             source_action_index = current_source_action_index
 
             action_index_before_get = action_queue.get_action_index()
             action = action_queue.get()
+            if (
+                action is not None
+                and prompt_controller is not None
+                and prompt_controller.snapshot()[1] != prompt_version
+            ):
+                continue
             recovered_stall_count = 0
             if action is not None:
                 recovered_stall_count = stall_count
@@ -687,7 +712,12 @@ def control_consumer(
 
                 action_start_wall = time.time()
                 action_start_perf = time.perf_counter()
-                env.step(action)
+                if prompt_controller is None:
+                    env.step(action)
+                else:
+                    accepted, _ = prompt_controller.apply_if_current(prompt_version, lambda action=action: env.step(action))
+                    if not accepted:
+                        continue
                 action_end_perf = time.perf_counter()
                 action_end_wall = time.time()
 
@@ -892,7 +922,6 @@ def main() -> None:
     latency_stats = LatencyTracker()
     shutdown_event = Event()
     prompt_ctrl = PromptController(args.prompt or client_profile.get("prompt"))
-    prompt_ctrl.start_stdin_listener()
 
     record_states: list = []
     record_actions: list = []
@@ -951,6 +980,8 @@ def main() -> None:
         warmup_raw = warmup_result["raw_actions"]
         warmup_proc = np.stack(warmup_result["actions"], axis=0)
         action_queue.merge(warmup_raw, warmup_proc, real_delay=0)
+        prompt_ctrl.set_on_change(action_queue.clear)
+        prompt_ctrl.start_stdin_listener()
 
         latency_stats.reset()
         warmup_latency_s = float(warmup_result.get("client_warmup_latency_s") or 0.0)
@@ -1001,6 +1032,7 @@ def main() -> None:
                 "time_origin": time_origin,
                 "perf_origin": perf_origin,
                 "recovery_blend_frames": int(client_profile.get("obs_recovery_blend_frames", 6)),
+                "prompt_controller": prompt_ctrl,
             },
             daemon=True,
             name="Consumer",

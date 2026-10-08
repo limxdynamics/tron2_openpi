@@ -1,0 +1,16 @@
+policy:
+  # Matches the pi0.5 architecture and normalization assets of step 30379.
+  config: pi05_tron2_ruyi_10task_subtask_infer
+  repo_id: ruyi_10task_subtask_v1
+  checkpoint_dir: ../tron2_openpi/checkpoints/pi05_tron2_multy-task/ruyi_10task_subtask_pi05base_rtc_h30_bs128_8gpu_2ep_20261007/30379
+
+  # Example from the training labels. Client --prompt/client.prompt overrides it.
+  default_prompt: Open the drawer
+  record: false
+  action_horizon: 30
+  state_dim: 18
+  use_delta_joint_actions: false
+
+server:
+  host: 127.0.0.1
+  port: 8000

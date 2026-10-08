@@ -6,6 +6,7 @@ profile schema for robot, camera, bridge, and client options.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from datetime import datetime
 import logging
 import math
@@ -13,7 +14,7 @@ from pathlib import Path
 import sys
 import threading
 import time
-from typing import Any
+from typing import Any, TypeVar
 
 from _external_tron2_env import ensure_external_tron2_env_on_path
 import einops
@@ -30,6 +31,7 @@ from tron2_env import EnvConfig
 from tron2_env import Tron2Config
 
 logger = logging.getLogger(__name__)
+_T = TypeVar("_T")
 
 DEFAULT_INIT_JOINTS = [
     0.026899,
@@ -280,20 +282,44 @@ def _clean_prompt(prompt: str | None) -> str | None:
 
 
 class PromptController:
-    """Thread-safe task prompt holder with optional live stdin updates."""
+    """Thread-safe task prompt holder with versioned live updates."""
 
     def __init__(self, initial: str | None = None):
         self._lock = threading.Lock()
         self._prompt = _clean_prompt(initial)
+        self._version = 0
+        self._on_change: Callable[[], None] | None = None
         self._thread: threading.Thread | None = None
 
     def get(self) -> str | None:
-        with self._lock:
-            return self._prompt
+        return self.snapshot()[0]
 
-    def set(self, prompt: str | None) -> None:
+    def snapshot(self) -> tuple[str | None, int]:
         with self._lock:
-            self._prompt = _clean_prompt(prompt)
+            return self._prompt, self._version
+
+    def set_on_change(self, callback: Callable[[], None]) -> None:
+        """Run callback atomically with updates, e.g. to clear queued actions."""
+        with self._lock:
+            self._on_change = callback
+
+    def set(self, prompt: str | None) -> bool:
+        cleaned = _clean_prompt(prompt)
+        with self._lock:
+            if cleaned == self._prompt:
+                return False
+            self._prompt = cleaned
+            self._version += 1
+            if self._on_change is not None:
+                self._on_change()
+            return True
+
+    def apply_if_current(self, version: int, action: Callable[[], _T]) -> tuple[bool, _T | None]:
+        """Commit a result only if its prompt is still current."""
+        with self._lock:
+            if version != self._version:
+                return False, None
+            return True, action()
 
     def start_stdin_listener(self) -> None:
         if self._thread is not None:
@@ -311,8 +337,8 @@ class PromptController:
                 text = line.strip()
                 if not text:
                     continue
-                self.set(text)
-                logger.info("[PROMPT] Updated task prompt -> %r", self.get())
+                if self.set(text):
+                    logger.info("[PROMPT] Updated task prompt -> %r", text)
         except Exception:
             logger.exception("Prompt stdin listener stopped.")
 

@@ -108,10 +108,14 @@ def main() -> None:
             if save_record:
                 record_state.append(obs["state"].copy())
 
+            prompt, prompt_version = prompt_ctrl.snapshot()
             ans, timing = infer_with_timing(
                 ws_client_policy,
-                format_obs(obs, prompt=prompt_ctrl.get()),
+                format_obs(obs, prompt=prompt),
             )
+            if prompt_ctrl.snapshot()[1] != prompt_version:
+                print("[PROMPT] Discarding inference from an older prompt")
+                continue
             server_timing = ans.get("server_timing", {})
             policy_timing = ans.get("policy_timing", {})
             print(
@@ -138,6 +142,9 @@ def main() -> None:
                 record_action.append(actions)
 
             for action in actions:
+                if prompt_ctrl.snapshot()[1] != prompt_version:
+                    print("[PROMPT] Stopping old prompt action chunk")
+                    break
                 arm_action = np.concatenate((action[:7], action[8:15]))
                 if last_action is not None:
                     error = np.abs(arm_action - last_action)
@@ -147,7 +154,10 @@ def main() -> None:
                         print(f"joint {joint_id}'s error is {max_diff:.4f}")
 
                 step_t0 = time.perf_counter()
-                env.step(action)
+                accepted, _ = prompt_ctrl.apply_if_current(prompt_version, lambda action=action: env.step(action))
+                if not accepted:
+                    print("[PROMPT] Stopping old prompt action chunk")
+                    break
                 last_action = arm_action
 
                 sleep_remaining = step_period - (time.perf_counter() - step_t0)

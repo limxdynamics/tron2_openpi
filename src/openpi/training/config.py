@@ -935,6 +935,34 @@ _CONFIGS = [
         weight_loader=weight_loaders.CheckpointWeightLoader("gs://openpi-assets/checkpoints/pi05_base/params"),
         num_train_steps=20_000,
     ),
+    # Inference-compatible profile for the 10-task Ruyi subtask checkpoint.
+    TrainConfig(
+        name="pi05_tron2_ruyi_10task_subtask_infer",
+        model=pi0_config.Pi0Config(
+            pi05=True,
+            action_horizon=30,
+            max_token_len=256,
+            rtc_training_simulated_delay=10,
+        ),
+        data=LeRobotTronDataConfig(
+            repo_id="ruyi_10task_subtask_v1",
+            assets=AssetsConfig(asset_id="ruyi_10task_subtask_v1"),
+            state_dim=18,
+            use_delta_joint_actions=False,
+            adapt_to_pi=False,
+            repack_transforms=_transforms.Group(inputs=[_transforms.RepackTransform({
+                "images": {
+                    "cam_high": "observation.images.cam_high",
+                    "cam_left_wrist": "observation.images.cam_left_wrist",
+                    "cam_right_wrist": "observation.images.cam_right_wrist",
+                },
+                "state": "observation.state",
+                "actions": "action",
+                "prompt": "prompt",
+            })]),
+        ),
+        policy_metadata={"state_dim": 18},
+    ),
     *_tron2_checkpoint_task_configs(),
     #
     # Fine-tuning DROID configs.
