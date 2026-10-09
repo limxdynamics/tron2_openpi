@@ -34,6 +34,11 @@ from deploy_config import select_profile_path
 from deploy_config import timestamp_ms
 import numpy as np
 from openpi_client import websocket_client_policy
+from openpi_client.er2 import ER2Decision
+from openpi_client.er2 import ER2Orchestrator
+from openpi_client.er2 import ER2PromptMonitor
+from openpi_client.er2 import LatestObservationBuffer
+from openpi_client.er2 import encode_cam_high_jpeg
 
 ensure_external_tron2_env_on_path()
 
@@ -373,6 +378,7 @@ def inference_producer(
     trained_rtc_mode: bool = False,
     prompt_controller: PromptController | None = None,
     obs_timeout_budget_s: float = 5.0,
+    observation_buffer: LatestObservationBuffer | None = None,
 ):
     """Thread: observation -> inference -> merge into ActionQueue."""
     try:
@@ -415,6 +421,9 @@ def inference_producer(
                     )
             if obs is None:
                 break
+
+            if observation_buffer is not None:
+                observation_buffer.publish(obs)
 
             obs_receive_perf = time.perf_counter()
             obs_receive_wall = time.time()
@@ -922,6 +931,12 @@ def main() -> None:
     latency_stats = LatencyTracker()
     shutdown_event = Event()
     prompt_ctrl = PromptController(args.prompt or client_profile.get("prompt"))
+    er2_profile = config_profile.get("er2") or {}
+    er2_enabled = bool_value(er2_profile.get("enabled", False))
+    er2_orchestrator: ER2Orchestrator | None = None
+    er2_observations: LatestObservationBuffer | None = None
+    er2_monitor: ER2PromptMonitor | None = None
+    er2_thread: Thread | None = None
 
     record_states: list = []
     record_actions: list = []
@@ -932,6 +947,26 @@ def main() -> None:
     with Tron2Env(env_config) as env:
         env.reset()
         logger.info("Robot initialized. Connecting to policy server...")
+
+        if er2_enabled:
+            if args.prompt or client_profile.get("prompt"):
+                raise ValueError("Do not set client.prompt or --prompt when top-level er2.enabled is true")
+            er2_orchestrator = ER2Orchestrator.from_config(er2_profile)
+            initial_observation = env.get_obs()
+            initial_decision = er2_orchestrator.plan(encode_cam_high_jpeg(initial_observation))
+            if initial_decision.decision != "set_skill":
+                er2_orchestrator.close()
+                raise RuntimeError(
+                    "ER2 did not select an initial skill: "
+                    f"decision={initial_decision.decision}, evidence={initial_decision.evidence}"
+                )
+            prompt_ctrl.set(er2_orchestrator.prompt_for(initial_decision.skill_id))
+            logger.info(
+                "[ER2] Initial skill=%s prompt=%r evidence=%s",
+                initial_decision.skill_id,
+                prompt_ctrl.get(),
+                initial_decision.evidence,
+            )
 
         ws_client = websocket_client_policy.WebsocketClientPolicy(
             host=policy_host(client_profile),
@@ -981,7 +1016,37 @@ def main() -> None:
         warmup_proc = np.stack(warmup_result["actions"], axis=0)
         action_queue.merge(warmup_raw, warmup_proc, real_delay=0)
         prompt_ctrl.set_on_change(action_queue.clear)
-        prompt_ctrl.start_stdin_listener()
+        if er2_orchestrator is None:
+            prompt_ctrl.start_stdin_listener()
+        else:
+            logger.info("[ER2] Live stdin prompt switching is disabled while ER2 owns orchestration.")
+
+        if er2_orchestrator is not None:
+            er2_observations = LatestObservationBuffer()
+
+            def apply_er2_decision(decision: ER2Decision, orchestrator: ER2Orchestrator) -> None:
+                logger.info(
+                    "[ER2] decision=%s skill=%s previous_status=%s goal=%s evidence=%s",
+                    decision.decision,
+                    decision.skill_id,
+                    decision.previous_skill_status,
+                    decision.goal_status,
+                    decision.evidence,
+                )
+                if decision.decision == "set_skill":
+                    prompt_ctrl.set(orchestrator.prompt_for(decision.skill_id))
+                elif decision.is_terminal:
+                    prompt_ctrl.set(None)
+
+            er2_monitor = ER2PromptMonitor(
+                er2_orchestrator,
+                er2_observations,
+                shutdown_event,
+                apply_er2_decision,
+                interval_s=float(er2_profile.get("interval_s", 1.0)),
+                jpeg_quality=int(er2_profile.get("jpeg_quality", 85)),
+                initial_skill_id=initial_decision.skill_id,
+            )
 
         latency_stats.reset()
         warmup_latency_s = float(warmup_result.get("client_warmup_latency_s") or 0.0)
@@ -1018,6 +1083,7 @@ def main() -> None:
                 "trained_rtc_mode": trained_rtc_mode,
                 "prompt_controller": prompt_ctrl,
                 "obs_timeout_budget_s": obs_timeout_budget_s,
+                "observation_buffer": er2_observations,
             },
             daemon=True,
             name="Producer",
@@ -1038,6 +1104,10 @@ def main() -> None:
             name="Consumer",
         )
         consumer_thread.start()
+
+        if er2_monitor is not None:
+            er2_thread = Thread(target=er2_monitor.run, daemon=True, name="ER2Monitor")
+            er2_thread.start()
 
         duration = float(client_profile.get("duration", 120.0))
         if duration and duration > 0:
@@ -1060,9 +1130,14 @@ def main() -> None:
         finally:
             logger.info("Stopping RTC threads")
             shutdown_event.set()
+            if er2_thread is not None:
+                er2_thread.join(timeout=5)
             producer_thread.join(timeout=5)
             consumer_thread.join(timeout=5)
             _save_records(config_profile, record_states, record_actions)
+
+        if er2_orchestrator is not None:
+            er2_orchestrator.close()
 
     logger.info("Cleanup completed")
 

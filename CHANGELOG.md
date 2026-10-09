@@ -6,6 +6,9 @@ This file records user-visible and repository-governance changes.
 
 ### Added
 
+- Optional Gemini Robotics ER 2 orchestration above the RTC VLA client, with a
+  closed skill catalog, latest-only camera observations, versioned prompt
+  switching, and offline CPU tests.
 - GitHub issue forms and a pull request template for public contributions.
 - Software-only CPU continuous integration checks for repository readiness and
   the `openpi-client` image and msgpack utilities.

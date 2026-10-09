@@ -21,6 +21,7 @@ transform、部署配置模板和 TRON2 真机客户端示例。
 - 可选的 Bridge 观测模式：从 TRON2 Bridge 获取图像和状态。
 - 可选的 legacy RealSense 观测模式：使用本机直连相机。
 - RTC 部署客户端，包含 warmup、观测超时恢复、队列诊断和可选动作平滑。
+- 可选的 Gemini Robotics ER 2 任务编排层；见 [ER 2 使用说明](docs/er2_orchestration_CN.md)。
 - `packages/openpi-client/` 中的 OpenPI client 包。
 
 ## 本仓库不包含什么

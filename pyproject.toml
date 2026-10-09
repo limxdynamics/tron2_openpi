@@ -45,6 +45,9 @@ dependencies = [
     "polars>=1.30.0",
 ]
 
+[project.optional-dependencies]
+er2 = ["google-genai>=2.25.0,<3.0"]
+
 [dependency-groups]
 dev = [
     "pytest>=8.3.4",

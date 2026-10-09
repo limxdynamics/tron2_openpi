@@ -35,6 +35,7 @@ jobs:
         run: |
           python -m pytest -q \
             packages/openpi-client/src/openpi_client/image_tools_test.py \
-            packages/openpi-client/src/openpi_client/msgpack_numpy_test.py
+            packages/openpi-client/src/openpi_client/msgpack_numpy_test.py \
+            packages/openpi-client/src/openpi_client/er2_test.py
       - name: Compile Python sources
         run: python -m compileall -q .

@@ -27,6 +27,8 @@ deployment profiles.
 - Optional legacy RealSense observation mode for directly attached cameras.
 - RTC deployment client with warmup, observation-timeout recovery, queue
   diagnostics, and optional action smoothing.
+- Optional Gemini Robotics ER 2 task orchestration above the RTC VLA client;
+  see [the ER 2 guide](docs/er2_orchestration.md).
 - OpenPI client package under `packages/openpi-client/`.
 
 ## What Is Not Included
