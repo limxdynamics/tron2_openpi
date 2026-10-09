@@ -18,12 +18,25 @@ uv sync --extra er2
 export GEMINI_API_KEY='...'
 ```
 
-Start a configured RTC client on a controlled robot LAN:
+Start the System 1 policy server first:
+
+```bash
+uv run scripts/serve_policy.py \
+  --profile configs/deploy/ruyi_er2_server.example.yaml
+```
+
+Then start the ER 2 RTC client on the controlled robot LAN:
 
 ```bash
 uv run python examples/tron2/pi_client_rtc.py \
   --profile configs/deploy/ruyi_er2_client.example.yaml
 ```
+
+The server profile loads the trained π0.5 checkpoint and serves port `8000`.
+The client profile points to that port and owns the ER 2 API key, task, skill
+catalog, robot endpoint, Bridge endpoint, and RTC loop. Replace the checkpoint,
+robot, Bridge, and camera placeholder values with the paths and addresses on
+the deployment host before running.
 
 The profile's `er2.task` is the high-level goal. Each skill needs an ID, the
 exact VLA prompt used during training, and an observable completion condition.

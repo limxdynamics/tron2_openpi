@@ -1,0 +1,24 @@
+# Server profile paired with ruyi_er2_client.example.yaml.
+# The server only loads the trained System 1 VLA; ER 2 runs in the client.
+
+policy:
+  # Inference config registered in src/openpi/training/config.py.
+  config: pi05_tron2_ruyi_10task_subtask_infer
+  repo_id: ruyi_10task_subtask_v1
+
+  # Set this to the checkpoint directory that contains params/ and assets/.
+  # This is the checkpoint path supplied for the Ruyi System 1 model.
+  checkpoint_dir: /mnt/data/oss/ruyi/checkpoints/pi05_tron2_ruyi_10task_subtask_trainingrtc/ruyi_10task_subtask_pi05base_rtc_h30_bs64_2pass_20261007
+
+  # Used only as a fallback when the client does not provide a prompt.
+  # ER 2 will select the first prompt before RTC warmup in ER 2 mode.
+  default_prompt: Open the drawer
+  record: false
+  action_horizon: 30
+  state_dim: 18
+  use_delta_joint_actions: false
+
+server:
+  # Use 0.0.0.0 when the client runs on another machine on the robot LAN.
+  host: 0.0.0.0
+  port: 8000

@@ -1,6 +1,6 @@
 client:
   # Human-readable task name used for record filenames.
-  task: ruyi_subtask_1epoch
+  task: ruyi_er2_drawer_toy
 
   # Policy server address from the client process.
   # Use 127.0.0.1 when the server and client run on the same machine.

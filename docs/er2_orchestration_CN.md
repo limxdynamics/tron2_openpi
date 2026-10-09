@@ -15,12 +15,23 @@ uv sync --extra er2
 export GEMINI_API_KEY='...'
 ```
 
-在受控机器人局域网中启动：
+先启动 System 1 policy server：
+
+```bash
+uv run scripts/serve_policy.py \
+  --profile configs/deploy/ruyi_er2_server.example.yaml
+```
+
+再在受控机器人局域网中启动 ER2 RTC client：
 
 ```bash
 uv run python examples/tron2/pi_client_rtc.py \
   --profile configs/deploy/ruyi_er2_client.example.yaml
 ```
+
+server profile 负责加载训练好的 π0.5 checkpoint，并监听 `8000` 端口；client
+profile 负责连接这个端口，并配置 ER2 API key、任务、技能目录、机器人地址、Bridge
+地址和 RTC 循环。运行前请确认 checkpoint、机器人、Bridge 和相机占位字段与实际部署环境一致。
 
 profile 中的 `er2.task` 是高层任务。每个技能需要 ID、训练时使用的 VLA prompt，以及
 可观察的完成条件。ER2 可以返回 `keep`、`set_skill`、`uncertain`、`failure` 或 `done`；
