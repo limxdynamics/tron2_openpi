@@ -14,8 +14,8 @@ client:
   # from the robot WebSocket.
   observation_source: bridge
 
-  # State sent to the policy: 16 means arms+grippers, 18 includes head joints.
-  state_dim: 18
+  # 16D smoke test: arms + grippers. Use 18 when including head joints.
+  state_dim: 16
 
   # Policy action playback rate. publish_rate is the background ServoJ rate.
   fps: 30.0

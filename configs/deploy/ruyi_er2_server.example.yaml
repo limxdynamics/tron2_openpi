@@ -15,7 +15,8 @@ policy:
   default_prompt: Open the drawer
   record: false
   action_horizon: 30
-  state_dim: 18
+  # 16D smoke test: arms + grippers. Use 18 when including head joints.
+  state_dim: 16
   use_delta_joint_actions: false
 
 server:

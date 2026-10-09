@@ -36,7 +36,9 @@ The server profile loads the trained π0.5 checkpoint and serves port `8000`.
 The client profile points to that port and owns the ER 2 API key, task, skill
 catalog, robot endpoint, Bridge endpoint, and RTC loop. Replace the checkpoint,
 robot, Bridge, and camera placeholder values with the paths and addresses on
-the deployment host before running.
+the deployment host before running. The checked-in example uses a 16-dimensional
+arms-and-grippers smoke test; use `state_dim: 18` in both profiles when head
+joints are part of the deployment interface.
 
 The profile's `er2.task` is the high-level goal. Each skill needs an ID, the
 exact VLA prompt used during training, and an observable completion condition.

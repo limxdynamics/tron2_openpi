@@ -31,7 +31,9 @@ uv run python examples/tron2/pi_client_rtc.py \
 
 server profile 负责加载训练好的 π0.5 checkpoint，并监听 `8000` 端口；client
 profile 负责连接这个端口，并配置 ER2 API key、任务、技能目录、机器人地址、Bridge
-地址和 RTC 循环。运行前请确认 checkpoint、机器人、Bridge 和相机占位字段与实际部署环境一致。
+地址和 RTC 循环。当前提交的示例使用 16 维手臂加夹爪 smoke test；如果部署接口包含头部关节，
+请在 server 和 client 两个 profile 中同时改为 `state_dim: 18`。运行前请确认 checkpoint、机器人、
+Bridge 和相机占位字段与实际部署环境一致。
 
 profile 中的 `er2.task` 是高层任务。每个技能需要 ID、训练时使用的 VLA prompt，以及
 可观察的完成条件。ER2 可以返回 `keep`、`set_skill`、`uncertain`、`failure` 或 `done`；
