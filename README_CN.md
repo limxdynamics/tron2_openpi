@@ -43,6 +43,9 @@ transform、部署配置模板和 TRON2 真机客户端示例。
 | Candy | [TRON2 OpenPI Candy 用户文档](https://cwjgfm21di.feishu.cn/wiki/DitfwjCRiiSWhBk3MTUcA14tnsh) | [Hugging Face](https://huggingface.co/limx-tron2/tron2-openpi-models) / [ModelScope](https://modelscope.cn/models/limx-tron2/tron2-openpi-models) | `configs/deploy/candy_server.yaml`, `configs/deploy/candy_client.yaml` |
 | Cloth | [TRON2 OpenPI Cloth 用户文档](https://cwjgfm21di.feishu.cn/wiki/Bcw8wthgpiLrVWkHXk0cBfLOnnc) | [Hugging Face](https://huggingface.co/limx-tron2/tron2-openpi-models) / [ModelScope](https://modelscope.cn/models/limx-tron2/tron2-openpi-models) | `configs/deploy/cloth_server.yaml`, `configs/deploy/cloth_client.yaml` |
 | Sort | [TRON2 OpenPI Sort 用户文档](https://cwjgfm21di.feishu.cn/wiki/PTpAwY597isKvXkJFq3csvLbnMh) | [Hugging Face](https://huggingface.co/limxdynamics/tron2-openpi-models) / [ModelScope](https://modelscope.cn/models/limx-tron2/tron2-openpi-models) | `configs/deploy/sort_client.yaml`, `configs/deploy/sort_server.yaml` |
+| 桌面整理 | [TRON2 OpenPI 桌面整理用户文档](https://cwjgfm21di.feishu.cn/wiki/WWm9woWZri3wDYkL6NxcBeC2n4b) | [Hugging Face](https://huggingface.co/limxdynamics/tron2-openpi-models) / [ModelScope](https://modelscope.cn/models/limx-tron2/tron2-openpi-models) | — |
+| 倒豆子 | [TRON2 OpenPI 倒豆子用户文档](https://cwjgfm21di.feishu.cn/wiki/Fvycw6Xk5ieqnykYxFYcOouUnGg) | [Hugging Face](https://huggingface.co/limxdynamics/tron2-openpi-models) / [ModelScope](https://modelscope.cn/models/limx-tron2/tron2-openpi-models) | — |
+| 清理地面 | [TRON2 OpenPI 清理地面用户文档](https://cwjgfm21di.feishu.cn/wiki/YjhjwBunVi87S7kbJffcMuW5nSg) | [Hugging Face](https://huggingface.co/limxdynamics/tron2-openpi-models) / [ModelScope](https://modelscope.cn/models/limx-tron2/tron2-openpi-models) | — |
 
 模型权重和 checkpoint 不存放在本仓库中。使用真机任务前，请先从表格中的模型仓库下载
 权重，并在对应任务 server profile 中填写实际 checkpoint 路径。
