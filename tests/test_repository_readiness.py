@@ -53,11 +53,11 @@ def _assert_terms(content: str, terms: tuple[str, ...]) -> None:
 
 @pytest.mark.parametrize(
     "relative_path",
-    (
+    [
         "CHANGELOG.md",
         *COLLABORATION_TEMPLATES,
         ".github/workflows/ci.yml",
-    ),
+    ],
 )
 def test_repository_readiness_files_exist_and_are_nonempty(relative_path: str):
     _read_repository_file(relative_path)
@@ -132,7 +132,7 @@ def test_security_policy_uses_the_approved_private_reporting_channel():
 
 @pytest.mark.parametrize(
     "relative_path",
-    ("CONTRIBUTING.md", ".github/ISSUE_TEMPLATE/bug_report.yml"),
+    ["CONTRIBUTING.md", ".github/ISSUE_TEMPLATE/bug_report.yml"],
 )
 def test_public_issue_surfaces_route_suspected_vulnerabilities_privately(relative_path: str):
     content = _read_repository_file(relative_path)
@@ -143,12 +143,12 @@ def test_public_issue_surfaces_route_suspected_vulnerabilities_privately(relativ
 
 @pytest.mark.parametrize(
     "relative_path",
-    (
+    [
         "README.md",
         "docs/remote_inference.md",
         "configs/deploy/tron2_deploy.server.example.yaml",
         "configs/deploy/tron2_deploy.client.example.yaml",
-    ),
+    ],
 )
 def test_english_runtime_docs_define_the_network_deployment_boundary(relative_path: str):
     content = _read_repository_file(relative_path)
@@ -171,11 +171,11 @@ def test_english_runtime_docs_define_the_network_deployment_boundary(relative_pa
 
 @pytest.mark.parametrize(
     "relative_path",
-    (
+    [
         "README_CN.md",
         "configs/deploy/tron2_deploy.server.example_CN.yaml",
         "configs/deploy/tron2_deploy.client.example_CN.yaml",
-    ),
+    ],
 )
 def test_chinese_runtime_docs_define_the_network_deployment_boundary(relative_path: str):
     content = _read_repository_file(relative_path)
@@ -198,7 +198,7 @@ def test_chinese_runtime_docs_define_the_network_deployment_boundary(relative_pa
 
 @pytest.mark.parametrize(
     ("relative_path", "terms"),
-    (
+    [
         ("README.md", ("source disclosure", "functional safety", "real-robot certification")),
         ("README_CN.md", ("源码公开", "功能安全", "真机认证")),
         (
@@ -211,7 +211,7 @@ def test_chinese_runtime_docs_define_the_network_deployment_boundary(relative_pa
         ),
         ("configs/deploy/tron2_deploy.server.example_CN.yaml", ("源码公开", "功能安全", "真机认证")),
         ("configs/deploy/tron2_deploy.client.example_CN.yaml", ("源码公开", "功能安全", "真机认证")),
-    ),
+    ],
 )
 def test_source_disclosure_is_not_described_as_safety_certification(relative_path: str, terms: tuple[str, ...]):
     _assert_terms(_read_repository_file(relative_path), terms)

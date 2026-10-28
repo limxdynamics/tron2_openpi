@@ -40,6 +40,11 @@ This file records user-visible and repository-governance changes.
 - Both READMEs name the deploy profile pair for every public task, list all six
   in the deployment section instead of only Candy, and mark which profiles use
   hardware-based names.
+- Formatted the tree with the repository's own `ruff` configuration and cleared the
+  findings it reported, so the `pre-commit` workflow passes. No runtime behavior
+  change; `warmup_policy()` and the two RTC client entry points now take their
+  boolean flag as a keyword argument, and four imports that follow the sibling
+  `tron2_env` path setup carry `# noqa: E402`.
 
 ### Fixed
 

@@ -278,9 +278,9 @@ class LeRobotAlohaDataConfig(DataConfigFactory):
             action_sequence_keys=self.action_sequence_keys,
         )
 
+
 @dataclasses.dataclass(frozen=True)
 class LeRobotTronDataConfig(DataConfigFactory):
-
     use_delta_joint_actions: bool = True
     default_prompt: str | None = None
     adapt_to_pi: bool = False

@@ -9,7 +9,8 @@ https://github.com/huggingface/lerobot/blob/main/src/lerobot/policies/rtc/modeli
 import jax
 import jax.numpy as jnp
 
-from .rtc_config import RTCAttentionSchedule, RTCConfig
+from .rtc_config import RTCAttentionSchedule
+from .rtc_config import RTCConfig
 
 
 def get_prefix_weights(start, end, total, schedule):
@@ -48,7 +49,7 @@ def get_prefix_weights(start, end, total, schedule):
         w = jnp.ones(total)
     elif schedule == "zeros":
         w = (jnp.arange(total) < start).astype(jnp.float32)
-    elif schedule == "linear" or schedule == "exp":
+    elif schedule in ("linear", "exp"):
         w = jnp.clip((start - 1 - jnp.arange(total)) / (end - start + 1) + 1, 0, 1)
         if schedule == "exp":
             w = w * jnp.expm1(w) / (jnp.e - 1)
@@ -138,8 +139,7 @@ class RTCProcessor:
             execution_horizon = self.rtc_config.execution_horizon
 
         # If prev chunk is shorter than execution horizon, clamp
-        if execution_horizon > prev_chunk_left_over.shape[1]:
-            execution_horizon = prev_chunk_left_over.shape[1]
+        execution_horizon = min(execution_horizon, prev_chunk_left_over.shape[1])
 
         batch_size = x_t.shape[0]
         action_chunk_size = x_t.shape[1]

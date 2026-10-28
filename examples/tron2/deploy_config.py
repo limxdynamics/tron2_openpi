@@ -107,9 +107,7 @@ def normalize_camera_profile(camera_profile: dict[str, Any]) -> dict[str, Any]:
     profile = dict(camera_profile)
     serial_to_name = profile.get("serial_to_name")
     if isinstance(serial_to_name, dict):
-        profile["serial_to_name"] = {
-            str(serial): _camera_name(name) for serial, name in serial_to_name.items()
-        }
+        profile["serial_to_name"] = {str(serial): _camera_name(name) for serial, name in serial_to_name.items()}
 
     camera_names = profile.get("camera_names")
     if camera_names:
@@ -216,9 +214,7 @@ def resolve_deploy_config(config_profile: dict[str, Any]) -> ResolvedDeployConfi
     head_profile = section(config_profile, "head")
     mobile_profile = section(config_profile, "mobile_base")
 
-    control_backend = str(
-        client_profile.get("control_backend", robot_profile.get("control_backend", "websocket"))
-    )
+    control_backend = str(client_profile.get("control_backend", robot_profile.get("control_backend", "websocket")))
     if control_backend != "websocket":
         raise ValueError("client.control_backend must be websocket in the public package")
 
@@ -349,7 +345,8 @@ def record_paths(
 ) -> tuple[Path, Path]:
     """Resolve timestamped action/state CSV paths under client config."""
     client_profile = section(config_profile, "client")
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    # Local wall-clock time: these names are for a human reading debug output on the robot host.
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")  # noqa: DTZ005
     task = task_name(config_profile)
     default_action_path = Path("debug_images") / f"{task}_{timestamp}_{action_suffix}.csv"
     default_state_path = Path("debug_images") / f"{task}_{timestamp}_{state_suffix}.csv"
@@ -362,15 +359,8 @@ def record_paths(
 
 def format_obs(obs: dict[str, Any], prompt: str | None = None) -> dict[str, Any]:
     """Format a TRON2 observation for the OpenPI websocket server."""
-    formatted = {
-        k: v.copy() if isinstance(v, np.ndarray) else v
-        for k, v in obs.items()
-        if k != "metadata"
-    }
-    formatted["images"] = {
-        k: v.copy() if isinstance(v, np.ndarray) else v
-        for k, v in obs.get("images", {}).items()
-    }
+    formatted = {k: v.copy() if isinstance(v, np.ndarray) else v for k, v in obs.items() if k != "metadata"}
+    formatted["images"] = {k: v.copy() if isinstance(v, np.ndarray) else v for k, v in obs.get("images", {}).items()}
     for cam_name, image in formatted["images"].items():
         img = image_tools.convert_to_uint8(image_tools.resize_with_pad(image, 224, 224))
         formatted["images"][cam_name] = einops.rearrange(img, "h w c -> c h w")
@@ -449,12 +439,14 @@ def infer_with_timing(policy, obs: dict[str, Any]) -> tuple[dict[str, Any], dict
     """Run one websocket inference and return client-side transport timing."""
     from openpi_client import msgpack_numpy
 
+    # The split below needs the client's own packer and socket: WebsocketClientPolicy.infer()
+    # does pack, send and recv in one call, and this probe times the three separately.
     t0 = time.perf_counter()
-    data = policy._packer.pack(obs)
+    data = policy._packer.pack(obs)  # noqa: SLF001
     t1 = time.perf_counter()
-    policy._ws.send(data)
+    policy._ws.send(data)  # noqa: SLF001
     t2 = time.perf_counter()
-    response = policy._ws.recv()
+    response = policy._ws.recv()  # noqa: SLF001
     t3 = time.perf_counter()
     if isinstance(response, str):
         raise RuntimeError(f"Error in inference server:\n{response}")

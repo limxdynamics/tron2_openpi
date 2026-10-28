@@ -39,9 +39,10 @@ from openpi_client import websocket_client_policy
 
 ensure_external_tron2_env_on_path()
 
-from tron2_env import Tron2Env
-from tron2_env.rtc import ActionQueue
-from tron2_env.rtc import LatencyTracker
+# Imported after the path setup above: tron2_env lives in the sibling checkout.
+from tron2_env import Tron2Env  # noqa: E402
+from tron2_env.rtc import ActionQueue  # noqa: E402
+from tron2_env.rtc import LatencyTracker  # noqa: E402
 
 logger = logging.getLogger(__name__)
 
@@ -129,16 +130,11 @@ class ActionPostProcessor:
 
     def __init__(self, config: ActionPostprocessConfig, scope_indices: dict[str, np.ndarray]):
         self.config = config
-        self._scope_indices = {
-            name: np.asarray(indices, dtype=np.int64)
-            for name, indices in scope_indices.items()
-        }
+        self._scope_indices = {name: np.asarray(indices, dtype=np.int64) for name, indices in scope_indices.items()}
 
     @property
     def enabled(self) -> bool:
-        return self.config.enabled and (
-            self.config.boundary_blend_frames > 0 or self.config.ema_alpha < 1.0
-        )
+        return self.config.enabled and (self.config.boundary_blend_frames > 0 or self.config.ema_alpha < 1.0)
 
     def describe(self) -> str:
         if not self.enabled:
@@ -151,8 +147,7 @@ class ActionPostProcessor:
             )
         if self.config.ema_alpha < 1.0:
             parts.append(
-                f"ema={self.config.ema_alpha:.2f}:{self.config.ema_scope}:"
-                f"{self.config.ema_frames or 'all'}"
+                f"ema={self.config.ema_alpha:.2f}:{self.config.ema_scope}:" f"{self.config.ema_frames or 'all'}"
             )
         return "+".join(parts)
 
@@ -160,12 +155,8 @@ class ActionPostProcessor:
     def affects_arm(self) -> bool:
         if not self.config.enabled:
             return False
-        return (
-            self.config.boundary_blend_frames > 0
-            and self.config.boundary_blend_scope in {"arm", "all"}
-        ) or (
-            self.config.ema_alpha < 1.0
-            and self.config.ema_scope in {"arm", "all"}
+        return (self.config.boundary_blend_frames > 0 and self.config.boundary_blend_scope in {"arm", "all"}) or (
+            self.config.ema_alpha < 1.0 and self.config.ema_scope in {"arm", "all"}
         )
 
     def _indices(self, scope: str, action_dim: int) -> np.ndarray:
@@ -230,10 +221,9 @@ class ActionPostProcessor:
             alpha = (offset + 1) / (count + 1)
             if self.config.boundary_blend_curve == "smoothstep":
                 alpha = alpha * alpha * (3.0 - 2.0 * alpha)
-            actions[start + offset, dims] = (
-                (1.0 - alpha) * old_processed_leftover[offset, dims]
-                + alpha * actions[start + offset, dims]
-            )
+            actions[start + offset, dims] = (1.0 - alpha) * old_processed_leftover[offset, dims] + alpha * actions[
+                start + offset, dims
+            ]
         return count
 
     def _apply_ema(
@@ -281,7 +271,7 @@ def _resolve_action_postprocess(client_profile: dict, resolved) -> ActionPostPro
         return raw_config.get(name, client_profile.get(legacy_name, default))
 
     config = ActionPostprocessConfig(
-        enabled=bool_value(option("enabled", "rtc_action_postprocess_enabled", False)),
+        enabled=bool_value(option("enabled", "rtc_action_postprocess_enabled", default=False)),
         boundary_blend_frames=max(0, int(option("boundary_blend_frames", "rtc_boundary_blend_frames", 0))),
         boundary_blend_curve=str(option("boundary_blend_curve", "rtc_boundary_blend_curve", "smoothstep")),
         boundary_blend_scope=str(option("boundary_blend_scope", "rtc_boundary_blend_scope", "arm")),
@@ -297,9 +287,7 @@ def _resolve_action_postprocess(client_profile: dict, resolved) -> ActionPostPro
         ("ema_scope", config.ema_scope),
     ):
         if scope not in {"arm", "end_effector", "gripper", "all"}:
-            raise ValueError(
-                f"client.rtc_action_postprocess.{field_name} must be 'arm', 'end_effector', or 'all'."
-            )
+            raise ValueError(f"client.rtc_action_postprocess.{field_name} must be 'arm', 'end_effector', or 'all'.")
     if not 0.0 < config.ema_alpha <= 1.0:
         raise ValueError("client.rtc_action_postprocess.ema_alpha must satisfy 0 < alpha <= 1.")
 
@@ -314,9 +302,7 @@ def _resolve_action_postprocess(client_profile: dict, resolved) -> ActionPostPro
         },
     )
     if resolved.modules is not None and resolved.modules.arm == "servop" and processor.affects_arm:
-        raise ValueError(
-            "ServoP RTC action post-processing cannot linearly blend arm pose/quaternion values"
-        )
+        raise ValueError("ServoP RTC action post-processing cannot linearly blend arm pose/quaternion values")
     return processor
 
 
@@ -324,10 +310,10 @@ def warmup_rtc(
     ws_client: websocket_client_policy.WebsocketClientPolicy,
     env: Tron2Env,
     prompt_controller: PromptController,
-    rtc_guidance_enabled: bool,
     rtc_guidance_weight: float,
     delay: int,
     *,
+    rtc_guidance_enabled: bool,
     action_horizon: int = DEFAULT_ACTION_HORIZON,
     trained_rtc_mode: bool = False,
 ):
@@ -385,11 +371,11 @@ def inference_producer(
     fps: float,
     execution_horizon: int,
     delay: int,
-    rtc_guidance_enabled: bool,
     rtc_guidance_weight: float,
     trigger_queue_size: int,
     action_postprocessor: ActionPostProcessor,
     *,
+    rtc_guidance_enabled: bool,
     action_horizon: int = DEFAULT_ACTION_HORIZON,
     record_states: list | None = None,
     time_origin: float | None = None,
@@ -559,9 +545,7 @@ def inference_producer(
 
             new_latency = t_infer_end - t_infer_start
             measured_inference_delay = (
-                0
-                if queue_size_before <= 0
-                else min(math.ceil(new_latency / time_per_chunk), merge_delay_cap)
+                0 if queue_size_before <= 0 else min(math.ceil(new_latency / time_per_chunk), merge_delay_cap)
             )
             if infer_count > 0:
                 inference_delay_buffer.append(measured_inference_delay)
@@ -968,9 +952,9 @@ def main() -> None:
             ws_client,
             env,
             prompt_ctrl,
-            rtc_guidance_enabled,
             rtc_guidance_weight,
             delay,
+            rtc_guidance_enabled=rtc_guidance_enabled,
             action_horizon=action_horizon,
             trained_rtc_mode=trained_rtc_mode,
         )
@@ -1001,13 +985,13 @@ def main() -> None:
                 fps,
                 execution_horizon,
                 delay,
-                rtc_guidance_enabled,
                 rtc_guidance_weight,
                 trigger_queue_size,
                 action_postprocessor,
             ),
             kwargs={
                 "action_horizon": action_horizon,
+                "rtc_guidance_enabled": rtc_guidance_enabled,
                 "record_states": record_states,
                 "time_origin": time_origin,
                 "perf_origin": perf_origin,

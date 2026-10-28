@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
+import sys
 
 
 def ensure_external_tron2_env_on_path() -> None:

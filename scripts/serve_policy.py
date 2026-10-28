@@ -171,8 +171,7 @@ def _get_train_config(
     train_config = _with_repo_id(train_config, repo_id)
     train_config = _with_action_horizon(train_config, action_horizon)
     train_config = _with_state_dim(train_config, state_dim)
-    train_config = _with_delta_actions(train_config, use_delta_joint_actions)
-    return train_config
+    return _with_delta_actions(train_config, use_delta_joint_actions)
 
 
 def _create_trained_policy(
@@ -270,7 +269,7 @@ def _policy_supports_rtc(policy: _policy.Policy) -> bool:
     } <= set(params)
 
 
-def warmup_policy(policy: _policy.Policy, rtc_supported: bool) -> None:
+def warmup_policy(policy: _policy.Policy, *, rtc_supported: bool) -> None:
     """Trigger JIT compilation before the first real client request."""
     model = getattr(policy, "_model", None)
     action_horizon = int(getattr(model, "action_horizon", 50))
@@ -333,7 +332,7 @@ def main(args: Args) -> None:
     if (args.rtc_enabled or _deploy_config.bool_value(server_profile.get("rtc_enabled", False))) and not rtc_supported:
         logging.warning("RTC was requested, but this model does not expose RTC parameters.")
 
-    warmup_policy(policy, rtc_supported)
+    warmup_policy(policy, rtc_supported=rtc_supported)
 
     record = args.record or _deploy_config.bool_value(policy_profile.get("record", False))
     if record:

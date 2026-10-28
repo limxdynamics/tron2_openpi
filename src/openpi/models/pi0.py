@@ -230,9 +230,7 @@ class Pi0(_model.BaseModel):
             # Sample delay per batch element from Unif[0, max_delay) as in the paper.
             delay_rng = jax.random.fold_in(time_rng, 1)
             max_delay = self.rtc_simulated_delay
-            delay = jax.random.randint(
-                delay_rng, batch_shape, minval=0, maxval=max_delay
-            )  # (b,)
+            delay = jax.random.randint(delay_rng, batch_shape, minval=0, maxval=max_delay)  # (b,)
 
             # Build per-token mask: True for positions < delay ("committed" prefix)
             pos_idx = jnp.arange(self.action_horizon)[None, :]  # (1, H)
@@ -241,9 +239,7 @@ class Pi0(_model.BaseModel):
             # Per-token time: committed positions get time=0.0 (clean/target in openpi).
             # This matches Kinetix's convention where committed positions are at the
             # "solved" end of the flow: x_t = actions, time=target.
-            time_per_token = jnp.where(
-                delay_mask, jnp.zeros_like(time[:, None]), time[:, None]
-            )  # (b, H)
+            time_per_token = jnp.where(delay_mask, jnp.zeros_like(time[:, None]), time[:, None])  # (b, H)
 
             # Build x_t with per-token time:
             # committed: time=0 → x_t = 0*noise + 1*actions = actions (clean)
@@ -271,9 +267,7 @@ class Pi0(_model.BaseModel):
             per_token_loss = jnp.mean(per_token_loss, axis=-1)  # (b, H)
             loss_mask = jnp.logical_not(delay_mask).astype(jnp.float32)  # (b, H)
             # Normalize per sample (avoid div-by-zero when delay == H)
-            return jnp.sum(per_token_loss * loss_mask, axis=-1) / (
-                jnp.sum(loss_mask, axis=-1) + 1e-8
-            )  # (b,)
+            return jnp.sum(per_token_loss * loss_mask, axis=-1) / (jnp.sum(loss_mask, axis=-1) + 1e-8)  # (b,)
 
         # Standard path (no training-time RTC)
         time_expanded = time[..., None, None]
@@ -333,18 +327,32 @@ class Pi0(_model.BaseModel):
                 # Much faster (~1x cost) but requires a model trained with
                 # rtc_training_simulated_delay.
                 return self._sample_actions_trained_rtc(
-                    observation, noise, prefix_mask, kv_cache,
-                    num_steps, dt, batch_size,
-                    prev_chunk_left_over, inference_delay,
+                    observation,
+                    noise,
+                    prefix_mask,
+                    kv_cache,
+                    num_steps,
+                    dt,
+                    batch_size,
+                    prev_chunk_left_over,
+                    inference_delay,
                 )
             # Inference-time RTC: jax.lax.scan with jax.vjp-based prefix guidance.
             # prefix_attention_schedule is read from self (frozen Python constant
             # during JIT, like self.pi05). Guidance weight can be supplied as a
             # scalar request parameter without changing input shapes.
             return self._sample_actions_rtc(
-                observation, noise, prefix_mask, kv_cache,
-                num_steps, dt, batch_size,
-                prev_chunk_left_over, prev_chunk_left_over_len, inference_delay, prefix_horizon,
+                observation,
+                noise,
+                prefix_mask,
+                kv_cache,
+                num_steps,
+                dt,
+                batch_size,
+                prev_chunk_left_over,
+                prev_chunk_left_over_len,
+                inference_delay,
+                prefix_horizon,
                 max_guidance_weight,
             )
 
@@ -410,7 +418,7 @@ class Pi0(_model.BaseModel):
         # Pad prev_chunk_left_over if shorter than action_horizon
         if prev_chunk_left_over.shape[1] < self.action_horizon:
             padded = jnp.zeros((batch_size, self.action_horizon, self.action_dim))
-            padded = padded.at[:, :prev_chunk_left_over.shape[1], :].set(prev_chunk_left_over)
+            padded = padded.at[:, : prev_chunk_left_over.shape[1], :].set(prev_chunk_left_over)
             prev_chunk_left_over = padded
 
         # Build committed mask: (1, H) → positions < inference_delay are committed
@@ -424,8 +432,9 @@ class Pi0(_model.BaseModel):
 
             # Per-token time: committed=0.0 (clean/target), rest=current loop time
             time_per_token = jnp.where(
-                committed_mask, jnp.zeros((batch_size, self.action_horizon)),
-                jnp.broadcast_to(time, (batch_size, self.action_horizon))
+                committed_mask,
+                jnp.zeros((batch_size, self.action_horizon)),
+                jnp.broadcast_to(time, (batch_size, self.action_horizon)),
             )  # (b, H)
 
             # Forward pass with per-token time
@@ -498,7 +507,7 @@ class Pi0(_model.BaseModel):
         # Pad prev_chunk_left_over if shorter than action_horizon
         if prev_chunk_left_over.shape[1] < self.action_horizon:
             padded = jnp.zeros((batch_size, self.action_horizon, self.action_dim))
-            padded = padded.at[:, :prev_chunk_left_over.shape[1], :].set(prev_chunk_left_over)
+            padded = padded.at[:, : prev_chunk_left_over.shape[1], :].set(prev_chunk_left_over)
             prev_chunk_left_over = padded
 
         # Clamp guidance to the real leftover length. In the paper, this length

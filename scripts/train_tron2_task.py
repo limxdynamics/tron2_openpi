@@ -9,7 +9,7 @@ import tyro
 from openpi.training import tron2_task_config
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
-import train  # noqa: E402
+import train
 
 
 @dataclasses.dataclass

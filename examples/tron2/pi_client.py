@@ -24,7 +24,8 @@ from openpi_client import websocket_client_policy
 
 ensure_external_tron2_env_on_path()
 
-from tron2_env import Tron2Env
+# Imported after the path setup above: tron2_env lives in the sibling checkout.
+from tron2_env import Tron2Env  # noqa: E402
 
 
 def _arm_values(vector, layout) -> np.ndarray:
@@ -73,9 +74,7 @@ def main() -> None:
     resolved = resolve_deploy_config(config_profile)
     client_profile = dict(resolved.client)
     if bool_value(client_profile.get("rtc_enabled", False)):
-        raise ValueError(
-            "client.rtc_enabled is true. Use examples/tron2/pi_client_rtc.py for RTC deployment."
-        )
+        raise ValueError("client.rtc_enabled is true. Use examples/tron2/pi_client_rtc.py for RTC deployment.")
 
     env_config = resolved.env_config
     layout = resolved.layout

@@ -63,9 +63,7 @@ class Policy(BasePolicy):
             self._sample_actions = model.sample_actions
         else:
             # JAX model setup
-            self._sample_actions = nnx_utils.module_jit(
-                model.sample_actions, static_argnames=("trained_rtc_mode",)
-            )
+            self._sample_actions = nnx_utils.module_jit(model.sample_actions, static_argnames=("trained_rtc_mode",))
             self._rng = rng or jax.random.key(0)
 
     @override
