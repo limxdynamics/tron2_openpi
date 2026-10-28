@@ -7,7 +7,7 @@
 [![Python](https://img.shields.io/badge/python-3.11-3776AB)](.python-version)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Models on Hugging Face](https://img.shields.io/badge/Hugging%20Face-models-FFD21E)](https://huggingface.co/limxdynamics/tron2-openpi-models)
-[![Models on ModelScope](https://img.shields.io/badge/ModelScope-models-624AFF)](https://modelscope.cn/models/limx-tron2/tron2-openpi-models)
+[![Models on ModelScope](https://img.shields.io/badge/ModelScope-models-624AFF)](https://modelscope.cn/models/limxdynamics/tron2-openpi-models)
 [![Runtime: tron2_env](https://img.shields.io/badge/runtime-tron2__env-0A7BBB)](https://github.com/limxdynamics/tron2_env)
 
 </div>
@@ -27,7 +27,9 @@ deployment profiles.
 ## Highlights
 
 - **pi0 / pi0.5 on a real robot.** OpenPI's policy serving and model stack, wired to TRON2 through policy transforms and deployment profiles.
-- **Six public tasks with weights.** Candy, Cloth, Sort, Organize the Desktop, Bean Pouring and Clean the Floor, each with a user guide and weights on Hugging Face and ModelScope.
+- **Six public tasks with weights.** Candy, Cloth, Sort, Organize the Desktop, Bean Pouring and
+  Clean the Floor, each with a user guide, published weights and a deploy profile — the next
+  section has the links.
 - **Fine-tune a new task from one YAML file.** `scripts/train_tron2_task.py` plus `configs/train/tron2_tasks/example.yaml`.
 - **Smooth real-time execution.** RTC client with warmup, observation-timeout recovery, queue diagnostics and optional action smoothing.
 - **Modular hardware.** ServoJ / ServoP arms, grippers or BrainCo2 hands, head, chassis and lifter.
@@ -39,16 +41,20 @@ released.
 
 | Task | User guide | Model weights | Public deploy profiles |
 | --- | --- | --- | --- |
-| Candy | [TRON2 OpenPI Candy user guide](https://cwjgfm21di.feishu.cn/wiki/NA5Rw1dWPiu6dwkFAfTcnaFLnQf) | [Hugging Face](https://huggingface.co/limxdynamics/tron2-openpi-models) / [ModelScope](https://modelscope.cn/models/limx-tron2/tron2-openpi-models) | `configs/deploy/candy_server.yaml`, `configs/deploy/candy_client.yaml` |
-| Cloth | [TRON2 OpenPI Cloth user guide](https://cwjgfm21di.feishu.cn/wiki/AsuRwJQ94igFPvkcyatctA4JnTc) | [Hugging Face](https://huggingface.co/limxdynamics/tron2-openpi-models) / [ModelScope](https://modelscope.cn/models/limx-tron2/tron2-openpi-models) | `configs/deploy/cloth_server.yaml`, `configs/deploy/cloth_client.yaml` |
-| Sort | [TRON2 OpenPI Sort user guide](https://cwjgfm21di.feishu.cn/wiki/Lm60wXBBligMKHkwDcjcZ1Rlnpb) | [Hugging Face](https://huggingface.co/limxdynamics/tron2-openpi-models) / [ModelScope](https://modelscope.cn/models/limx-tron2/tron2-openpi-models) | `configs/deploy/sort_client.yaml`, `configs/deploy/sort_server.yaml` |
-| Organize the Desktop | [TRON2 OpenPI Organize the Desktop user guide](https://cwjgfm21di.feishu.cn/wiki/COE0whc3giulI6kN5V3cNmj1nxg) | [Hugging Face](https://huggingface.co/limxdynamics/tron2-openpi-models) / [ModelScope](https://modelscope.cn/models/limx-tron2/tron2-openpi-models) | — |
-| Bean Pouring | [TRON2 OpenPI Bean Pouring user guide](https://cwjgfm21di.feishu.cn/wiki/Jm0CwcUXHiz9HMkKkIvcvavhnQb) | [Hugging Face](https://huggingface.co/limxdynamics/tron2-openpi-models) / [ModelScope](https://modelscope.cn/models/limx-tron2/tron2-openpi-models) | — |
-| Clean the Floor | [TRON2 OpenPI Clean the Floor user guide](https://cwjgfm21di.feishu.cn/wiki/CZMRwbgR5ipaDKknTZwcuMibnRg) | [Hugging Face](https://huggingface.co/limxdynamics/tron2-openpi-models) / [ModelScope](https://modelscope.cn/models/limx-tron2/tron2-openpi-models) | — |
+| Candy | [TRON2 OpenPI Candy user guide](https://cwjgfm21di.feishu.cn/wiki/NA5Rw1dWPiu6dwkFAfTcnaFLnQf) | [Hugging Face](https://huggingface.co/limxdynamics/tron2-openpi-models) / [ModelScope](https://modelscope.cn/models/limxdynamics/tron2-openpi-models) | `configs/deploy/candy_server.yaml`, `configs/deploy/candy_client.yaml` |
+| Cloth | [TRON2 OpenPI Cloth user guide](https://cwjgfm21di.feishu.cn/wiki/AsuRwJQ94igFPvkcyatctA4JnTc) | [Hugging Face](https://huggingface.co/limxdynamics/tron2-openpi-models) / [ModelScope](https://modelscope.cn/models/limxdynamics/tron2-openpi-models) | `configs/deploy/cloth_server.yaml`, `configs/deploy/cloth_client.yaml` |
+| Sort | [TRON2 OpenPI Sort user guide](https://cwjgfm21di.feishu.cn/wiki/Lm60wXBBligMKHkwDcjcZ1Rlnpb) | [Hugging Face](https://huggingface.co/limxdynamics/tron2-openpi-models) / [ModelScope](https://modelscope.cn/models/limxdynamics/tron2-openpi-models) | `configs/deploy/sort_server.yaml`, `configs/deploy/sort_client.yaml` |
+| Organize the Desktop | [TRON2 OpenPI Organize the Desktop user guide](https://cwjgfm21di.feishu.cn/wiki/COE0whc3giulI6kN5V3cNmj1nxg) | [Hugging Face](https://huggingface.co/limxdynamics/tron2-openpi-models) / [ModelScope](https://modelscope.cn/models/limxdynamics/tron2-openpi-models) | `configs/deploy/desktop_server.yaml`, `configs/deploy/desktop_client.yaml` |
+| Bean Pouring | [TRON2 OpenPI Bean Pouring user guide](https://cwjgfm21di.feishu.cn/wiki/Jm0CwcUXHiz9HMkKkIvcvavhnQb) | [Hugging Face](https://huggingface.co/limxdynamics/tron2-openpi-models) / [ModelScope](https://modelscope.cn/models/limxdynamics/tron2-openpi-models) | `configs/deploy/brainco_server.yaml`, `configs/deploy/brainco_client.yaml` |
+| Clean the Floor | [TRON2 OpenPI Clean the Floor user guide](https://cwjgfm21di.feishu.cn/wiki/CZMRwbgR5ipaDKknTZwcuMibnRg) | [Hugging Face](https://huggingface.co/limxdynamics/tron2-openpi-models) / [ModelScope](https://modelscope.cn/models/limxdynamics/tron2-openpi-models) | `configs/deploy/chassis_server.yaml`, `configs/deploy/chassis_client.yaml` |
 
 Model weights and checkpoints are not stored in this repository. Download the
 weights from the linked model repository, then set the actual checkpoint path in
-the task server profile before running a robot.
+the task server profile before running a robot. The model repository also carries
+a `banana` checkpoint set, which has no user guide or public profile yet.
+
+The user guides are Feishu wiki pages: they need a LimX Feishu account with access
+to that workspace, and each language links to its own guide.
 
 ## How It Fits Together
 
@@ -58,22 +64,19 @@ the task server profile before running a robot.
 
 The robot client imports the sibling [`tron2_env`](https://github.com/limxdynamics/tron2_env) runtime for motion control and observations.
 
-## What This Repository Provides
+## Where Each Piece Lives
 
-- pi0.5 policy serving through `scripts/serve_policy.py`.
-- TRON2 policy input/output transforms in `src/openpi/policies/tron2_policy.py`.
-- TRON2 training/deployment config registrations in `src/openpi/training/config.py`.
-- TRON2 robot clients in `examples/tron2/`.
-- Public deployment templates in `configs/deploy/`.
-- YAML-driven TRON2 task training via `scripts/train_tron2_task.py` and
-  `configs/train/tron2_tasks/example.yaml`.
-- Optional bridge observation mode for images and state from TRON2 Bridge.
-- Optional legacy RealSense observation mode for directly attached cameras.
-- RTC deployment client with warmup, observation-timeout recovery, queue
-  diagnostics, and optional action smoothing.
-- Modular TRON2 deployment for ServoJ/ServoP arms, gripper/BrainCo2 paired
-  hands, head, chassis, and lifter modules.
-- OpenPI client package under `packages/openpi-client/`.
+| Piece | Where |
+| --- | --- |
+| pi0.5 policy serving | `scripts/serve_policy.py`, driven by one profile YAML |
+| TRON2 policy input/output transforms | `src/openpi/policies/tron2_policy.py` |
+| TRON2 training and deployment config registration | `src/openpi/training/config.py` |
+| Robot clients, non-RTC and RTC | `examples/tron2/pi_client.py`, `examples/tron2/pi_client_rtc.py` |
+| Per-task profiles and generic templates | `configs/deploy/` |
+| YAML-driven task training | `scripts/train_tron2_task.py` with `configs/train/tron2_tasks/example.yaml` |
+| Observation source | `client.observation_source: bridge` reads images and state from TRON2 Bridge; `legacy` reads cameras attached to the client machine |
+| Modular hardware selection | the `arm`, `end_effector`, `head` and `mobile_base` sections of a client profile |
+| OpenPI client package | `packages/openpi-client/` |
 
 ## What Is Not Included
 
@@ -91,27 +94,29 @@ The robot client imports the sibling [`tron2_env`](https://github.com/limxdynami
 parent-directory/
 ├── tron2_openpi/
 │   ├── configs/
-│   │   ├── deploy/
-│   │   │   ├── candy_server.yaml
-│   │   │   ├── candy_client.yaml
-│   │   │   ├── tron2_deploy.server.example.yaml
-│   │   │   ├── tron2_deploy.client.example.yaml
-│   │   │   ├── tron2_deploy.server.example_CN.yaml
-│   │   │   └── tron2_deploy.client.example_CN.yaml
+│   │   ├── deploy/                      # <task>_server.yaml + <task>_client.yaml
+│   │   │   ├── candy_*.yaml             #   candy, cloth, sort, desktop
+│   │   │   ├── brainco_*.yaml           #   bean pouring
+│   │   │   ├── chassis_*.yaml           #   clean the floor
+│   │   │   └── tron2_deploy.*.example*.yaml   # generic templates, EN and CN
 │   │   └── train/
 │   │       └── tron2_tasks/
 │   │           └── example.yaml
 │   ├── examples/
-│   │   └── tron2/
-│   │       ├── deploy_config.py
-│   │       ├── pi_client.py
-│   │       └── pi_client_rtc.py
+│   │   ├── tron2/                       # the TRON2 clients
+│   │   │   ├── deploy_config.py
+│   │   │   ├── pi_client.py
+│   │   │   └── pi_client_rtc.py
+│   │   └── ...                          # upstream example sets, unchanged
 │   ├── packages/
 │   │   └── openpi-client/
 │   ├── scripts/
 │   │   ├── cloud_train_entrypoint_portable.sh
 │   │   ├── compute_norm_stats.py
+│   │   ├── docker/                      # serving image and compose file
 │   │   ├── serve_policy.py
+│   │   ├── train.py                     # upstream training entry points
+│   │   ├── train_pytorch.py
 │   │   └── train_tron2_task.py
 │   └── src/
 │       └── openpi/
@@ -125,7 +130,19 @@ Recorded-action replay utilities live in `../tron2_env/examples/replay_data.py`.
 ## Installation
 
 Environment requirements and setup commands live in [INSTALL.md](INSTALL.md).
-For the Chinese installation guide, see [INSTALL_CN.md](INSTALL_CN.md).
+For the Chinese installation guide, see [INSTALL_CN.md](INSTALL_CN.md). To run the
+policy server in a container, build `scripts/docker/serve_policy.Dockerfile` or use
+`docker compose -f scripts/docker/compose.yml up --build`.
+
+## Other Documents
+
+| Document | Covers | Note |
+| --- | --- | --- |
+| [`docs/norm_stats.md`](docs/norm_stats.md) | How state and action normalization works, and where pre-training statistics come from | Upstream text; the robots and asset ids it lists are upstream's, not TRON2's |
+| [`docs/remote_inference.md`](docs/remote_inference.md) | Serving on one machine and embedding the client on another | Upstream text; its `--env` examples are upstream environments — this fork is driven by `--profile` |
+| [`docs/docker.md`](docs/docker.md) | Docker notes for the upstream example set | Written for the upstream examples; `examples/tron2/` has no `compose.yml` |
+| [`SECURITY.md`](SECURITY.md) | Vulnerability reporting and the full deployment boundary | — |
+| [`CONTRIBUTING.md`](CONTRIBUTING.md) | What belongs in a public contribution | — |
 
 ## Deployment
 
@@ -137,17 +154,26 @@ Deployment uses two profiles per task:
 - Client profile: policy-server address, robot endpoint, observation source,
   camera/Bridge settings, execution loop, and RTC settings.
 
-Use the public Candy profiles or generic templates as starting points:
+Every public task ships one pair, so a task can be started without writing a profile first:
 
-- Candy server profile: `configs/deploy/candy_server.yaml`
-- Candy client profile: `configs/deploy/candy_client.yaml`
+| Task | Server profile | Client profile |
+| --- | --- | --- |
+| Candy | `configs/deploy/candy_server.yaml` | `configs/deploy/candy_client.yaml` |
+| Cloth | `configs/deploy/cloth_server.yaml` | `configs/deploy/cloth_client.yaml` |
+| Sort | `configs/deploy/sort_server.yaml` | `configs/deploy/sort_client.yaml` |
+| Organize the Desktop | `configs/deploy/desktop_server.yaml` | `configs/deploy/desktop_client.yaml` |
+| Bean Pouring | `configs/deploy/brainco_server.yaml` | `configs/deploy/brainco_client.yaml` |
+| Clean the Floor | `configs/deploy/chassis_server.yaml` | `configs/deploy/chassis_client.yaml` |
+
+For a task with no public profile, start from a generic template:
+
 - English templates: `configs/deploy/tron2_deploy.server.example.yaml`,
   `configs/deploy/tron2_deploy.client.example.yaml`
 - Chinese templates: `configs/deploy/tron2_deploy.server.example_CN.yaml`,
   `configs/deploy/tron2_deploy.client.example_CN.yaml`
 
-Future public tasks should follow the same naming pattern:
-`configs/deploy/<task>_server.yaml` and `configs/deploy/<task>_client.yaml`.
+New public tasks use `<task>_server.yaml` and `<task>_client.yaml`; `brainco_*` and
+`chassis_*` keep the hardware-based names they shipped with.
 
 For custom private profiles, copy the generic templates to `.local.yaml` files
 and edit only those local files:
@@ -193,7 +219,7 @@ Server fields:
 | Field | Description |
 | --- | --- |
 | `policy.config` | Training config name registered in `src/openpi/training/config.py`. |
-| `policy.repo_id` | Asset directory name used to load normalization statistics. |
+| `policy.repo_id` | Name of the asset directory inside the checkpoint that holds the normalization statistics, i.e. `<policy.checkpoint_dir>/assets/<policy.repo_id>/norm_stats.json`. The published task checkpoints use `input`, except the chassis set, which uses `chassis270` — so this has to match the directory that is actually inside the checkpoint you downloaded. |
 | `policy.checkpoint_dir` | Path to the trained checkpoint step directory. |
 | `policy.default_prompt` | Default language instruction when the client does not pass `--prompt`. |
 | `policy.record` | Saves raw policy inputs/outputs for debugging when `true`. |
@@ -260,13 +286,17 @@ WebSocket. Lifter control requires
 The public runtime supports the WebSocket control backend only. See
 `configs/deploy/tron2_deploy.client.example.yaml` for all fields and comments.
 
+#### Config Names and Asset IDs
+
 `policy.repo_id` must match the asset directory inside the checkpoint:
 
 ```text
 checkpoint_dir/assets/<policy.repo_id>/norm_stats.json
 ```
 
-Example TRON2 config names currently registered in the code:
+Config names registered in `src/openpi/training/config.py`, with the asset id each one defaults to
+in code. A profile can override both: the public task profiles set `policy.repo_id: input` together
+with the `state_dim` that matches their checkpoint.
 
 | `policy.config` | `policy.repo_id` |
 | --- | --- |
@@ -279,15 +309,16 @@ Example TRON2 config names currently registered in the code:
 | `pi05_tron2_drawer` | `drawer` |
 | `pi05_tron2_duck` | `duck` |
 | `pi05_tron2_sort` | `sort` |
+| `pi05_tron2_example` | `example_task` |
 
-### Run Policy Serving
-
-Start the policy server:
+### Start the Policy Server
 
 ```bash
 uv run scripts/serve_policy.py \
   --profile configs/deploy/candy_server.yaml
 ```
+
+### Run the Robot Client
 
 **Note: the robot should be in the initial state after L1+X, then switched to
 advanced developer mode. After the client starts, the robot will spread both
@@ -395,9 +426,10 @@ uv run scripts/train_tron2_task.py \
 
 For one-command training, use `scripts/cloud_train_entrypoint_portable.sh`. It
 computes normalization statistics first unless `--skip-norm` is passed, then
-launches training.
-Its `--physical-dim` option writes both `state_dim` and `action_dim` into the
-generated task config. The default is `16`, and the valid range is 1 through 32.
+launches training; `--prompt` is required unless `--prompt-from-task` is passed,
+which uses each episode's own task text instead. Its `--physical-dim` option
+writes both `state_dim` and `action_dim` into the generated task config. The
+default is `16`, and the valid range is 1 through 32.
 
 Cloud/platform mode assumes the dataset and weights are mounted by the platform.
 With the default paths, `--repo-id input` means the LeRobot dataset is under
@@ -442,9 +474,10 @@ scripts/cloud_train_entrypoint_portable.sh \
 
 Real task YAML files are ignored by `.gitignore`; keep only
 `configs/train/tron2_tasks/example.yaml` in the public repository. The template
-supports `repo_id`, prompt, dataset column keys, `action_horizon`, `state_dim`,
-`action_dim`, `fsdp_devices`, base checkpoint weights, output directories,
-`prompt_from_task`, and optional `rtc_training_simulated_delay`.
+supports `name` (which becomes the checkpoint subdirectory), `repo_id`, prompt,
+dataset column keys, `action_horizon`, `state_dim`, `action_dim`, `fsdp_devices`,
+base checkpoint weights, output directories, `prompt_from_task`, and optional
+`rtc_training_simulated_delay`.
 
 ## Network Deployment Boundary
 
@@ -484,6 +517,12 @@ See `SECURITY.md` for vulnerability reporting and the full deployment boundary.
   `camera.serial_to_name`.
 - If the robot does not move, verify `robot.ip`, `robot.port`, controller state,
   and that the workspace is safe before retrying.
+- If serving stops with `Config '<name>' not found`, that `policy.config` is not
+  registered; the available names are the table above and
+  `_tron2_checkpoint_task_configs()` in `src/openpi/training/config.py`.
+- If normalization statistics fail to load, check that `policy.repo_id` names a
+  directory that exists under `<policy.checkpoint_dir>/assets/`; the published
+  task checkpoints ship `input`.
 
 ## Third-Party Origins
 

@@ -37,8 +37,16 @@ This file records user-visible and repository-governance changes.
   handling for ServoP quaternion actions and BrainCo2 hand slices.
 - Updated the BrainCo and chassis server profiles with their deployment
   checkpoint paths.
+- Both READMEs name the deploy profile pair for every public task, list all six
+  in the deployment section instead of only Candy, and mark which profiles use
+  hardware-based names.
 
 ### Fixed
 
 - Stabilized quantile normalization for nearly constant state and action
   dimensions to prevent amplified training targets and gradient spikes.
+- ModelScope links in both READMEs and in the model badge pointed at the retired
+  `limx-tron2` namespace, which returns 404; they now use `limxdynamics`.
+- `policy.repo_id` is documented as the asset directory that has to exist inside
+  the downloaded checkpoint, and the config table is marked as the in-code
+  defaults rather than the published layout.

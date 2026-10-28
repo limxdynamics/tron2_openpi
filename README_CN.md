@@ -7,7 +7,7 @@
 [![Python](https://img.shields.io/badge/python-3.11-3776AB)](.python-version)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Models on Hugging Face](https://img.shields.io/badge/Hugging%20Face-models-FFD21E)](https://huggingface.co/limxdynamics/tron2-openpi-models)
-[![Models on ModelScope](https://img.shields.io/badge/ModelScope-models-624AFF)](https://modelscope.cn/models/limx-tron2/tron2-openpi-models)
+[![Models on ModelScope](https://img.shields.io/badge/ModelScope-models-624AFF)](https://modelscope.cn/models/limxdynamics/tron2-openpi-models)
 [![Runtime: tron2_env](https://img.shields.io/badge/runtime-tron2__env-0A7BBB)](https://github.com/limxdynamics/tron2_env)
 
 </div>
@@ -24,7 +24,8 @@ transform、部署配置模板和 TRON2 真机客户端示例。
 ## 亮点
 
 - **pi0 / pi0.5 跑在真机上。** 沿用 OpenPI 的策略服务和模型栈，通过 policy transform 和部署配置接入 TRON2。
-- **6 个带权重的公开任务。** 抓糖果、叠衣服、分拣、桌面整理、倒豆子、清理地面，每个任务都有用户文档，权重发布在 Hugging Face 和 ModelScope。
+- **6 个带权重的公开任务。** 抓糖果、叠衣服、分拣、桌面整理、倒豆子、清理地面，每个任务都有用户
+  文档、公开权重和部署 profile，链接见下一节。
 - **一个 YAML 文件微调新任务。** `scripts/train_tron2_task.py` 配合 `configs/train/tron2_tasks/example.yaml`。
 - **平滑的实时执行。** RTC 客户端支持预热、观测超时恢复、队列诊断和可选的动作平滑。
 - **模块化硬件。** 支持 ServoJ / ServoP 双臂、夹爪或 BrainCo2 灵巧手、头部、底盘和升降台。
@@ -35,15 +36,18 @@ transform、部署配置模板和 TRON2 真机客户端示例。
 
 | 任务 | 用户文档 | 模型权重 | 公开部署 profile |
 | --- | --- | --- | --- |
-| Candy | [TRON2 OpenPI Candy 用户文档](https://cwjgfm21di.feishu.cn/wiki/DitfwjCRiiSWhBk3MTUcA14tnsh) | [Hugging Face](https://huggingface.co/limxdynamics/tron2-openpi-models) / [ModelScope](https://modelscope.cn/models/limx-tron2/tron2-openpi-models) | `configs/deploy/candy_server.yaml`, `configs/deploy/candy_client.yaml` |
-| Cloth | [TRON2 OpenPI Cloth 用户文档](https://cwjgfm21di.feishu.cn/wiki/Bcw8wthgpiLrVWkHXk0cBfLOnnc) | [Hugging Face](https://huggingface.co/limxdynamics/tron2-openpi-models) / [ModelScope](https://modelscope.cn/models/limx-tron2/tron2-openpi-models) | `configs/deploy/cloth_server.yaml`, `configs/deploy/cloth_client.yaml` |
-| Sort | [TRON2 OpenPI Sort 用户文档](https://cwjgfm21di.feishu.cn/wiki/PTpAwY597isKvXkJFq3csvLbnMh) | [Hugging Face](https://huggingface.co/limxdynamics/tron2-openpi-models) / [ModelScope](https://modelscope.cn/models/limx-tron2/tron2-openpi-models) | `configs/deploy/sort_client.yaml`, `configs/deploy/sort_server.yaml` |
-| 桌面整理 | [TRON2 OpenPI 桌面整理用户文档](https://cwjgfm21di.feishu.cn/wiki/WWm9woWZri3wDYkL6NxcBeC2n4b) | [Hugging Face](https://huggingface.co/limxdynamics/tron2-openpi-models) / [ModelScope](https://modelscope.cn/models/limx-tron2/tron2-openpi-models) | — |
-| 倒豆子 | [TRON2 OpenPI 倒豆子用户文档](https://cwjgfm21di.feishu.cn/wiki/Fvycw6Xk5ieqnykYxFYcOouUnGg) | [Hugging Face](https://huggingface.co/limxdynamics/tron2-openpi-models) / [ModelScope](https://modelscope.cn/models/limx-tron2/tron2-openpi-models) | — |
-| 清理地面 | [TRON2 OpenPI 清理地面用户文档](https://cwjgfm21di.feishu.cn/wiki/YjhjwBunVi87S7kbJffcMuW5nSg) | [Hugging Face](https://huggingface.co/limxdynamics/tron2-openpi-models) / [ModelScope](https://modelscope.cn/models/limx-tron2/tron2-openpi-models) | — |
+| Candy | [TRON2 OpenPI Candy 用户文档](https://cwjgfm21di.feishu.cn/wiki/DitfwjCRiiSWhBk3MTUcA14tnsh) | [Hugging Face](https://huggingface.co/limxdynamics/tron2-openpi-models) / [ModelScope](https://modelscope.cn/models/limxdynamics/tron2-openpi-models) | `configs/deploy/candy_server.yaml`, `configs/deploy/candy_client.yaml` |
+| Cloth | [TRON2 OpenPI Cloth 用户文档](https://cwjgfm21di.feishu.cn/wiki/Bcw8wthgpiLrVWkHXk0cBfLOnnc) | [Hugging Face](https://huggingface.co/limxdynamics/tron2-openpi-models) / [ModelScope](https://modelscope.cn/models/limxdynamics/tron2-openpi-models) | `configs/deploy/cloth_server.yaml`, `configs/deploy/cloth_client.yaml` |
+| Sort | [TRON2 OpenPI Sort 用户文档](https://cwjgfm21di.feishu.cn/wiki/PTpAwY597isKvXkJFq3csvLbnMh) | [Hugging Face](https://huggingface.co/limxdynamics/tron2-openpi-models) / [ModelScope](https://modelscope.cn/models/limxdynamics/tron2-openpi-models) | `configs/deploy/sort_server.yaml`, `configs/deploy/sort_client.yaml` |
+| 桌面整理 | [TRON2 OpenPI 桌面整理用户文档](https://cwjgfm21di.feishu.cn/wiki/WWm9woWZri3wDYkL6NxcBeC2n4b) | [Hugging Face](https://huggingface.co/limxdynamics/tron2-openpi-models) / [ModelScope](https://modelscope.cn/models/limxdynamics/tron2-openpi-models) | `configs/deploy/desktop_server.yaml`, `configs/deploy/desktop_client.yaml` |
+| 倒豆子 | [TRON2 OpenPI 倒豆子用户文档](https://cwjgfm21di.feishu.cn/wiki/Fvycw6Xk5ieqnykYxFYcOouUnGg) | [Hugging Face](https://huggingface.co/limxdynamics/tron2-openpi-models) / [ModelScope](https://modelscope.cn/models/limxdynamics/tron2-openpi-models) | `configs/deploy/brainco_server.yaml`, `configs/deploy/brainco_client.yaml` |
+| 清理地面 | [TRON2 OpenPI 清理地面用户文档](https://cwjgfm21di.feishu.cn/wiki/YjhjwBunVi87S7kbJffcMuW5nSg) | [Hugging Face](https://huggingface.co/limxdynamics/tron2-openpi-models) / [ModelScope](https://modelscope.cn/models/limxdynamics/tron2-openpi-models) | `configs/deploy/chassis_server.yaml`, `configs/deploy/chassis_client.yaml` |
 
 模型权重和 checkpoint 不存放在本仓库中。使用真机任务前，请先从表格中的模型仓库下载
-权重，并在对应任务 server profile 中填写实际 checkpoint 路径。
+权重，并在对应任务 server profile 中填写实际 checkpoint 路径。模型仓库里还有一套
+`banana` 权重，尚未提供用户文档或公开 profile。
+
+用户文档是飞书 wiki 页面：需要有可访问该知识库的 LimX 飞书账号；中英文各指向自己那份文档。
 
 ## 整体架构
 
@@ -53,21 +57,19 @@ transform、部署配置模板和 TRON2 真机客户端示例。
 
 机器人客户端通过同级的 [`tron2_env`](https://github.com/limxdynamics/tron2_env) 运行时完成运动控制和观测采集。
 
-## 本仓库包含什么
+## 各部分在哪里
 
-- 通过 `scripts/serve_policy.py` 启动 pi0.5 策略服务。
-- `src/openpi/policies/tron2_policy.py` 中的 TRON2 policy 输入/输出转换。
-- `src/openpi/training/config.py` 中的 TRON2 训练/部署配置注册。
-- `examples/tron2/` 中的 TRON2 真机客户端。
-- `configs/deploy/` 中的公开部署配置模板。
-- 通过 `scripts/train_tron2_task.py` 和 `configs/train/tron2_tasks/example.yaml`
-  使用 YAML 配置新的 TRON2 训练任务。
-- 可选的 Bridge 观测模式：从 TRON2 Bridge 获取图像和状态。
-- 可选的 legacy RealSense 观测模式：使用本机直连相机。
-- RTC 部署客户端，包含 warmup、观测超时恢复、队列诊断和可选动作平滑。
-- 模块化 TRON2 部署：支持 ServoJ/ServoP 双臂、夹爪/BrainCo2 双灵巧手、
-  头部以及底盘和升降台。
-- `packages/openpi-client/` 中的 OpenPI client 包。
+| 内容 | 位置 |
+| --- | --- |
+| pi0.5 策略服务 | `scripts/serve_policy.py`，由一份 profile YAML 驱动 |
+| TRON2 policy 输入/输出转换 | `src/openpi/policies/tron2_policy.py` |
+| TRON2 训练/部署配置注册 | `src/openpi/training/config.py` |
+| 真机客户端（非 RTC / RTC） | `examples/tron2/pi_client.py`、`examples/tron2/pi_client_rtc.py` |
+| 各任务 profile 与通用模板 | `configs/deploy/` |
+| YAML 驱动的任务训练 | `scripts/train_tron2_task.py` 配合 `configs/train/tron2_tasks/example.yaml` |
+| 观测来源 | `client.observation_source: bridge` 从 TRON2 Bridge 取图像与状态；`legacy` 读客户端本机相机 |
+| 模块化硬件选择 | client profile 的 `arm`、`end_effector`、`head`、`mobile_base` 四段 |
+| OpenPI client 包 | `packages/openpi-client/` |
 
 ## 本仓库不包含什么
 
@@ -84,27 +86,29 @@ transform、部署配置模板和 TRON2 真机客户端示例。
 同级目录/
 ├── tron2_openpi/
 │   ├── configs/
-│   │   ├── deploy/
-│   │   │   ├── candy_server.yaml
-│   │   │   ├── candy_client.yaml
-│   │   │   ├── tron2_deploy.server.example.yaml
-│   │   │   ├── tron2_deploy.client.example.yaml
-│   │   │   ├── tron2_deploy.server.example_CN.yaml
-│   │   │   └── tron2_deploy.client.example_CN.yaml
+│   │   ├── deploy/                      # <任务名>_server.yaml + <任务名>_client.yaml
+│   │   │   ├── candy_*.yaml             #   抓糖果、叠衣服、分拣、桌面整理
+│   │   │   ├── brainco_*.yaml           #   倒豆子
+│   │   │   ├── chassis_*.yaml           #   清理地面
+│   │   │   └── tron2_deploy.*.example*.yaml   # 通用模板，中英各一套
 │   │   └── train/
 │   │       └── tron2_tasks/
 │   │           └── example.yaml
 │   ├── examples/
-│   │   └── tron2/
-│   │       ├── deploy_config.py
-│   │       ├── pi_client.py
-│   │       └── pi_client_rtc.py
+│   │   ├── tron2/                       # TRON2 客户端
+│   │   │   ├── deploy_config.py
+│   │   │   ├── pi_client.py
+│   │   │   └── pi_client_rtc.py
+│   │   └── ...                          # 上游示例集，未改动
 │   ├── packages/
 │   │   └── openpi-client/
 │   ├── scripts/
 │   │   ├── cloud_train_entrypoint_portable.sh
 │   │   ├── compute_norm_stats.py
+│   │   ├── docker/                      # 服务镜像与 compose 文件
 │   │   ├── serve_policy.py
+│   │   ├── train.py                     # 上游训练入口
+│   │   ├── train_pytorch.py
 │   │   └── train_tron2_task.py
 │   └── src/
 │       └── openpi/
@@ -118,7 +122,19 @@ transform、部署配置模板和 TRON2 真机客户端示例。
 ## 安装
 
 环境要求和安装命令已移到 [INSTALL_CN.md](INSTALL_CN.md)。英文版见
-[INSTALL.md](INSTALL.md)。
+[INSTALL.md](INSTALL.md)。如需在容器里跑 policy server，可构建
+`scripts/docker/serve_policy.Dockerfile`，或执行
+`docker compose -f scripts/docker/compose.yml up --build`。
+
+## 其他文档
+
+| 文档 | 内容 | 说明 |
+| --- | --- | --- |
+| [`docs/norm_stats.md`](docs/norm_stats.md) | 状态与动作归一化的原理，以及预训练统计量的来源 | 上游原文；其中列出的机器人和 assets id 属于上游，不是 TRON2 |
+| [`docs/remote_inference.md`](docs/remote_inference.md) | 在一台机器上做服务、在另一台机器里嵌入客户端 | 上游原文；其中的 `--env` 是上游环境的用法，本 fork 用 `--profile` |
+| [`docs/docker.md`](docs/docker.md) | 上游示例集的 Docker 说明 | 针对上游示例；`examples/tron2/` 下没有 `compose.yml` |
+| [`SECURITY.md`](SECURITY.md) | 漏洞报告方式与完整部署边界 | — |
+| [`CONTRIBUTING.md`](CONTRIBUTING.md) | 哪些内容属于公开贡献范围 | — |
 
 ## 部署
 
@@ -129,17 +145,26 @@ transform、部署配置模板和 TRON2 真机客户端示例。
 - server profile：模型 checkpoint、默认 prompt、policy 覆盖项和服务端口。
 - client profile：policy server 地址、机器人地址、观测来源、相机/Bridge、执行循环和 RTC 参数。
 
-请从公开 Candy profile 或通用模板开始：
+每个公开任务都自带一对 profile，不必先写 profile 就能启动：
 
-- Candy server profile：`configs/deploy/candy_server.yaml`
-- Candy client profile：`configs/deploy/candy_client.yaml`
+| 任务 | server profile | client profile |
+| --- | --- | --- |
+| 抓糖果 | `configs/deploy/candy_server.yaml` | `configs/deploy/candy_client.yaml` |
+| 叠衣服 | `configs/deploy/cloth_server.yaml` | `configs/deploy/cloth_client.yaml` |
+| 分拣 | `configs/deploy/sort_server.yaml` | `configs/deploy/sort_client.yaml` |
+| 桌面整理 | `configs/deploy/desktop_server.yaml` | `configs/deploy/desktop_client.yaml` |
+| 倒豆子 | `configs/deploy/brainco_server.yaml` | `configs/deploy/brainco_client.yaml` |
+| 清理地面 | `configs/deploy/chassis_server.yaml` | `configs/deploy/chassis_client.yaml` |
+
+没有公开 profile 的任务，从通用模板开始：
+
 - 英文模板：`configs/deploy/tron2_deploy.server.example.yaml`、
   `configs/deploy/tron2_deploy.client.example.yaml`
 - 中文模板：`configs/deploy/tron2_deploy.server.example_CN.yaml`、
   `configs/deploy/tron2_deploy.client.example_CN.yaml`
 
-后续公开任务按同样方式命名：
-`configs/deploy/<任务名>_server.yaml` 和 `configs/deploy/<任务名>_client.yaml`。
+新公开任务按 `<任务名>_server.yaml` / `<任务名>_client.yaml` 命名；`brainco_*` 与
+`chassis_*` 沿用发布时的硬件命名。
 
 如果需要自定义私有配置，可以从通用模板复制 `.local.yaml`，并只修改本地文件：
 
@@ -184,7 +209,7 @@ server 字段：
 | 字段 | 说明 |
 | --- | --- |
 | `policy.config` | `src/openpi/training/config.py` 中注册的训练配置名。 |
-| `policy.repo_id` | 用于加载归一化统计的 assets 目录名。 |
+| `policy.repo_id` | checkpoint 内保存归一化统计的 assets 目录名，即 `<policy.checkpoint_dir>/assets/<policy.repo_id>/norm_stats.json`。已发布的 checkpoint 用的是 `input`，但 chassis 那套是 `chassis270` —— 这一项必须和你实际下载的 checkpoint 里的目录名一致。 |
 | `policy.checkpoint_dir` | 训练好的 checkpoint step 目录。 |
 | `policy.default_prompt` | 客户端未传 `--prompt` 时使用的默认语言指令。 |
 | `policy.record` | 为 `true` 时保存原始 policy 输入/输出，用于调试。 |
@@ -246,13 +271,17 @@ BrainCo2 每只手占 6 维，必须配置 `end_effector.command_time`。底盘/
 WebSocket 控制后端。完整字段和注释见
 `configs/deploy/tron2_deploy.client.example_CN.yaml`。
 
+#### 配置名与 assets 目录
+
 `policy.repo_id` 必须和 checkpoint 内的 assets 目录一致：
 
 ```text
 checkpoint_dir/assets/<policy.repo_id>/norm_stats.json
 ```
 
-当前代码中注册的 TRON2 示例配置：
+下表中是 `src/openpi/training/config.py` 里注册的配置名，以及各自在代码里默认的 assets 目录名。
+profile 可以覆盖这两项：公开任务 profile 用的是 `policy.repo_id: input`，并带上与 checkpoint
+匹配的 `state_dim`。
 
 | `policy.config` | `policy.repo_id` |
 | --- | --- |
@@ -265,15 +294,16 @@ checkpoint_dir/assets/<policy.repo_id>/norm_stats.json
 | `pi05_tron2_drawer` | `drawer` |
 | `pi05_tron2_duck` | `duck` |
 | `pi05_tron2_sort` | `sort` |
+| `pi05_tron2_example` | `example_task` |
 
 ### 启动策略服务
-
-启动 policy server：
 
 ```bash
 uv run scripts/serve_policy.py \
   --profile configs/deploy/candy_server.yaml
 ```
+
+### 运行真机客户端
 
 **注意：机器人需处于L1+X后的初始状态，然后切换到高级开发者模式，运行客户端后机器人会侧展双臂，然后前伸，若非初始状态可能会直接抬起双臂，警惕前方物体风险！！！**
 
@@ -373,9 +403,10 @@ uv run scripts/train_tron2_task.py \
 ```
 
 如需一条命令完成训练，可以使用 `scripts/cloud_train_entrypoint_portable.sh`。
-除非传入 `--skip-norm`，它会先计算 norm，再启动训练。
-该脚本的 `--physical-dim` 会同时设置生成任务配置中的 `state_dim` 和 `action_dim`，
-默认值为 `16`，有效范围为 1 到 32。
+除非传入 `--skip-norm`，它会先计算 norm，再启动训练；`--prompt` 为必填，除非传入
+`--prompt-from-task`，此时改用每个 episode 自带的任务文本。该脚本的 `--physical-dim`
+会同时设置生成任务配置中的 `state_dim` 和 `action_dim`，默认值为 `16`，有效范围为
+1 到 32。
 
 云端/平台挂载模式假设数据和权重由平台挂载。按默认路径，`--repo-id input` 表示
 LeRobot 数据集位于 `/data/input/`，初始权重位于 `/data/checkpoint/params`，输出写到
@@ -418,9 +449,9 @@ scripts/cloud_train_entrypoint_portable.sh \
 ```
 
 真实任务 YAML 已被 `.gitignore` 忽略；公开仓库只保留
-`configs/train/tron2_tasks/example.yaml`。模板支持 `repo_id`、prompt、数据列名、
-`action_horizon`、`state_dim`、`action_dim`、`fsdp_devices`、base checkpoint
-权重、输出路径，以及可选的 `prompt_from_task` 和
+`configs/train/tron2_tasks/example.yaml`。模板支持 `name`（决定 checkpoint 子目录名）、
+`repo_id`、prompt、数据列名、`action_horizon`、`state_dim`、`action_dim`、
+`fsdp_devices`、base checkpoint 权重、输出路径，以及可选的 `prompt_from_task` 和
 `rtc_training_simulated_delay`。
 
 ## 网络部署边界
@@ -449,6 +480,10 @@ policy server/client、TRON2 机器人控制和 Bridge 观测链路仅支持在�
 - 如果 Bridge 观测超时，检查 `bridge.host`、TLS 设置和 Bridge 服务状态。
 - 如果 legacy 模式找不到相机，检查 `camera.serial_to_name` 中的 RealSense 序列号。
 - 如果机器人不运动，检查 `robot.ip`、`robot.port`、控制器状态，并确认工作空间安全后再重试。
+- 如果服务启动时报 `Config '<name>' not found`，说明该 `policy.config` 未注册；可用的名字见上表，
+  以及 `src/openpi/training/config.py` 里的 `_tron2_checkpoint_task_configs()`。
+- 如果归一化统计加载失败，确认 `policy.repo_id` 指向 `<policy.checkpoint_dir>/assets/` 下实际存在的
+  目录；公开任务 checkpoint 里的是 `input`。
 
 ## 第三方来源
 
