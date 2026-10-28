@@ -50,3 +50,6 @@ This file records user-visible and repository-governance changes.
 - `policy.repo_id` is documented as the asset directory that has to exist inside
   the downloaded checkpoint, and the config table is marked as the in-code
   defaults rather than the published layout.
+- `INSTALL.md` and `INSTALL_CN.md` cloned from the retired `limx-tron2`
+  organisation; both now point at `limxdynamics`, matching the repository's own
+  URLs.

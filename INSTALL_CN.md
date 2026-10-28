@@ -33,8 +33,8 @@ export PATH="$HOME/.local/bin:$PATH"
 将本仓库和独立的 TRON2 运行时仓库 clone 到同级目录：
 
 ```bash
-git clone https://github.com/limx-tron2/tron2_openpi.git
-git clone https://github.com/limx-tron2/tron2_env.git
+git clone https://github.com/limxdynamics/tron2_openpi.git
+git clone https://github.com/limxdynamics/tron2_env.git
 
 cd tron2_openpi
 ```

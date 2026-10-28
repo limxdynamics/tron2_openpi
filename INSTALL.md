@@ -35,8 +35,8 @@ export PATH="$HOME/.local/bin:$PATH"
 Clone this repository and the independent TRON2 runtime repository as siblings:
 
 ```bash
-git clone https://github.com/limx-tron2/tron2_openpi.git
-git clone https://github.com/limx-tron2/tron2_env.git
+git clone https://github.com/limxdynamics/tron2_openpi.git
+git clone https://github.com/limxdynamics/tron2_env.git
 
 cd tron2_openpi
 ```
