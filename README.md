@@ -26,12 +26,19 @@ deployment profiles.
 
 ## Demo
 
-<p align="center">
-  <img src="docs/media/cloth_fold.gif" alt="TRON2 folds a T-shirt on a table with both arms, without human input" width="480">
-</p>
+<table>
+  <tr>
+    <td align="center"><img src="docs/media/cloth_fold.gif" alt="TRON2 folds a T-shirt on a table with both arms, without human input" height="300"></td>
+    <td align="center"><img src="docs/media/candy_handover.gif" alt="TRON2 picks candy from a plate and puts it into the empty hand held out to it, skipping hands that already hold candy or another object" height="300"></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Cloth</b>: folds a T-shirt on its own.<br><sub>2× speed · <a href="docs/media/cloth_fold.mp4">real-time MP4, 36 s</a></sub></td>
+    <td align="center"><b>Candy</b>: hands candy only to empty hands,<br>skipping hands that hold candy, a cup or a plate.<br><sub>2× speed · <a href="docs/media/candy_handover.mp4">MP4, 29 s</a></sub></td>
+  </tr>
+</table>
 
-<p align="center"><sub>TRON2 folding a T-shirt on its own: the Cloth task in the table below.
-LimX Dynamics footage at 2× speed; <a href="docs/media/cloth_fold.mp4">full clip in real time (MP4, 36 s)</a>.</sub></p>
+<p align="center"><sub>LimX Dynamics real-robot footage, fully autonomous. Both tasks are in the table under
+<a href="#example-tasks-and-public-resources">Example Tasks and Public Resources</a>.</sub></p>
 
 ## Highlights
 

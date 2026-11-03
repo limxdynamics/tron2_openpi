@@ -23,12 +23,19 @@ transform、部署配置模板和 TRON2 真机客户端示例。
 
 ## 演示
 
-<p align="center">
-  <img src="docs/media/cloth_fold.gif" alt="TRON2 双臂在桌面上自主叠好一件 T 恤，全程无人干预" width="480">
-</p>
+<table>
+  <tr>
+    <td align="center"><img src="docs/media/cloth_fold.gif" alt="TRON2 双臂在桌面上自主叠好一件 T 恤，全程无人干预" height="300"></td>
+    <td align="center"><img src="docs/media/candy_handover.gif" alt="TRON2 从盘子里抓糖果，只递给伸过来的空手，跳过已经拿着糖果或其他物品的手" height="300"></td>
+  </tr>
+  <tr>
+    <td align="center"><b>叠衣服（Cloth）</b>：自主叠好 T 恤。<br><sub>2 倍速 · <a href="docs/media/cloth_fold.mp4">原速 MP4，36 秒</a></sub></td>
+    <td align="center"><b>抓糖果（Candy）</b>：只把糖果递给空手，<br>跳过拿着糖果、杯子或盘子的手。<br><sub>2 倍速 · <a href="docs/media/candy_handover.mp4">MP4，29 秒</a></sub></td>
+  </tr>
+</table>
 
-<p align="center"><sub>TRON2 自主叠 T 恤，对应下表的 Cloth（叠衣服）任务。
-逐际动力实拍，动图为 2 倍速；<a href="docs/media/cloth_fold.mp4">原速完整片段（MP4，36 秒）</a>。</sub></p>
+<p align="center"><sub>逐际动力真机实拍，全自主运行。两个任务都在下方
+<a href="#示例任务与公开资源">示例任务与公开资源</a>表格里。</sub></p>
 
 ## 亮点
 
