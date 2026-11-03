@@ -6,6 +6,8 @@ This file records user-visible and repository-governance changes.
 
 ### Added
 
+- README demo: real-robot footage of TRON2 folding a T-shirt (Cloth task), as a
+  2× GIF and a real-time MP4 under `docs/media/`.
 - GitHub issue forms and a pull request template for public contributions.
 - Software-only CPU continuous integration checks for repository readiness and
   the `openpi-client` image and msgpack utilities.

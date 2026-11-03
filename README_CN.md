@@ -21,6 +21,15 @@ transform、部署配置模板和 TRON2 真机客户端示例。
 本仓库需要和同级的 `tron2_env` 运行时包一起使用。它的定位是集成和部署示例，
 不是私有 checkpoint、数据集、low-level 机器人 SDK 或本地部署配置的完整发布。
 
+## 演示
+
+<p align="center">
+  <img src="docs/media/cloth_fold.gif" alt="TRON2 双臂在桌面上自主叠好一件 T 恤，全程无人干预" width="480">
+</p>
+
+<p align="center"><sub>TRON2 自主叠 T 恤，对应下表的 Cloth（叠衣服）任务。
+逐际动力实拍，动图为 2 倍速；<a href="docs/media/cloth_fold.mp4">原速完整片段（MP4，36 秒）</a>。</sub></p>
+
 ## 亮点
 
 - **pi0 / pi0.5 跑在真机上。** 沿用 OpenPI 的策略服务和模型栈，通过 policy transform 和部署配置接入 TRON2。

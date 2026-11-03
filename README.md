@@ -24,6 +24,15 @@ runtime package. It is an integration and deployment example, not a complete
 release of private checkpoints, datasets, low-level robot SDKs, or local
 deployment profiles.
 
+## Demo
+
+<p align="center">
+  <img src="docs/media/cloth_fold.gif" alt="TRON2 folds a T-shirt on a table with both arms, without human input" width="480">
+</p>
+
+<p align="center"><sub>TRON2 folding a T-shirt on its own: the Cloth task in the table below.
+LimX Dynamics footage at 2× speed; <a href="docs/media/cloth_fold.mp4">full clip in real time (MP4, 36 s)</a>.</sub></p>
+
 ## Highlights
 
 - **pi0 / pi0.5 on a real robot.** OpenPI's policy serving and model stack, wired to TRON2 through policy transforms and deployment profiles.
