@@ -14,6 +14,8 @@
 
 # TRON2 OpenPI
 
+> **Part of the TRON2 open-source ecosystem.** Where to start and the other TRON2 repositories: [TRON2 quick start](https://github.com/limxdynamics/limxdynamics/blob/main/doc/quickstart.md#tron2).
+
 `tron2_openpi` is a TRON2 deployment-focused derivative of the OpenPI project.
 It keeps the OpenPI policy-serving and pi0/pi0.5 model stack, then adds TRON2
 policy transforms, deployment configuration templates, and real-robot client

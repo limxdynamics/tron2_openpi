@@ -14,6 +14,8 @@
 
 # TRON2 OpenPI
 
+> **TRON2 开源生态的一部分。** 上手路线和其他 TRON2 仓库：[TRON2 快速上手](https://github.com/limxdynamics/limxdynamics/blob/main/doc/quickstart_cn.md#tron2)。
+
 `tron2_openpi` 是基于 OpenPI 改进的 TRON2 部署仓库。它保留 OpenPI 的
 policy serving、pi0/pi0.5 模型栈和客户端基础能力，并加入 TRON2 policy
 transform、部署配置模板和 TRON2 真机客户端示例。
