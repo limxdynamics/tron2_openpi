@@ -12,6 +12,8 @@
 [![Fork of Physical-Intelligence/openpi](https://img.shields.io/badge/fork%20of-Physical--Intelligence%2Fopenpi-2f6feb)](https://github.com/Physical-Intelligence/openpi)
 [![微信开发者社区](https://img.shields.io/badge/%E5%BE%AE%E4%BF%A1-%E5%BC%80%E5%8F%91%E8%80%85%E7%A4%BE%E5%8C%BA-07C160?logo=wechat&logoColor=white)](https://github.com/limxdynamics/limxdynamics/blob/main/doc/wechat_qr.png)
 
+<p align="center"><sub>合作采购请联系 <a href="mailto:opensource@limxdynamics.com">opensource@limxdynamics.com</a></sub></p>
+
 </div>
 
 # TRON2 OpenPI
